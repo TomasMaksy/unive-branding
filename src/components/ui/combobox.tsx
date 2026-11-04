@@ -10,8 +10,16 @@ import type * as React from "react";
  * same filled capsule as Input; the list is Select's white surface and rows.
  * Pass `items` to the root so it can filter, and render rows from the list's
  * function child.
+ *
+ * The best match is highlighted as you type, so Enter always picks something:
+ * type "Yale", press Enter, and Yale is chosen. Pass `autoHighlight={false}`
+ * to turn that off.
  */
-export const Combobox: typeof ComboboxPrimitive.Root = ComboboxPrimitive.Root;
+export function Combobox<Value, Multiple extends boolean | undefined = false, Item = Value>(
+  props: ComboboxPrimitive.Root.Props<Value, Multiple, Item>,
+): React.ReactElement {
+  return <ComboboxPrimitive.Root autoHighlight {...props} />;
+}
 
 const SIZES = {
   xs: "h-8 text-sm [--px:--spacing(3)]",
@@ -25,9 +33,12 @@ export function ComboboxInput({
   size = "default",
   showClear = true,
   showTrigger = true,
+  leading,
   ...props
 }: Omit<ComboboxPrimitive.Input.Props, "size"> & {
   size?: keyof typeof SIZES;
+  /** Something before the text: a flag, a search icon. Pair with ComboboxValue to show the picked option's flag. */
+  leading?: React.ReactNode;
   /** A small × once something is typed or picked. */
   showClear?: boolean;
   /** The chevrons on the right, to open the list without typing. */
@@ -43,8 +54,14 @@ export function ComboboxInput({
       )}
       data-slot="combobox-input-group"
     >
+      {leading ? (
+        <span className="pointer-events-none flex shrink-0 items-center ps-(--px) text-pebble [&_svg]:size-4">{leading}</span>
+      ) : null}
       <ComboboxPrimitive.Input
-        className="h-full w-full min-w-0 flex-1 rounded-[inherit] bg-transparent ps-(--px) pe-1 outline-none placeholder:text-pebble"
+        className={cn(
+          "h-full w-full min-w-0 flex-1 rounded-[inherit] bg-transparent pe-1 outline-none placeholder:text-pebble",
+          leading ? "ps-2" : "ps-(--px)",
+        )}
         data-slot="combobox-input"
         {...props}
       />
@@ -113,33 +130,66 @@ export function ComboboxList({ className, ...props }: ComboboxPrimitive.List.Pro
   return <ComboboxPrimitive.List className={cn("outline-none", className)} data-slot="combobox-list" {...props} />;
 }
 
-export function ComboboxItem({ className, children, ...props }: ComboboxPrimitive.Item.Props): React.ReactElement {
+/**
+ * One option. Plain text by default, cut to one line. Give it `leading` for a
+ * flag or icon, and `description` for a second, quieter line: the onboarding
+ * pickers' headline and subline.
+ */
+export function ComboboxItem({
+  className,
+  children,
+  leading,
+  description,
+  indicatorProps,
+  ...props
+}: ComboboxPrimitive.Item.Props & {
+  /** Before the text: a Flag, an icon. Centred on the headline. */
+  leading?: React.ReactNode;
+  /** A second line under the label, in pebble. Makes the row two lines tall. */
+  description?: React.ReactNode;
+  /** Passed to the check; `{ hidden: true }` for rows that never show one, like "Add …". */
+  indicatorProps?: ComboboxPrimitive.ItemIndicator.Props;
+}): React.ReactElement {
+  const twoLine = description != null;
   return (
     <ComboboxPrimitive.Item
       className={cn(
         // Select's row: text 16px in, the check on the right.
-        "grid min-h-9 w-full min-w-0 cursor-default grid-cols-[minmax(0,1fr)_1rem] items-center gap-2 rounded-2xl py-1.5 ps-3 pe-3 text-[15px] text-ink outline-none transition-colors duration-100 data-disabled:pointer-events-none data-highlighted:bg-mist data-disabled:opacity-48",
+        "flex min-h-9 w-full min-w-0 cursor-default items-center gap-2.5 rounded-2xl py-1.5 ps-3 pe-3 text-[15px] text-ink outline-none transition-colors duration-100 data-disabled:pointer-events-none data-highlighted:bg-mist data-disabled:opacity-48",
+        twoLine && "items-start py-2",
         className,
       )}
       data-slot="combobox-item"
       {...props}
     >
-      <ComboboxPrimitive.ItemIndicator className="col-start-2 row-start-1 text-meadow">
-        <svg
-          aria-hidden="true"
-          fill="none"
-          height="16"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          width="16"
-        >
-          <path d="M5.252 12.7 10.2 18.63 18.748 5.37" />
-        </svg>
-      </ComboboxPrimitive.ItemIndicator>
-      <span className="col-start-1 row-start-1 min-w-0 truncate">{children}</span>
+      {leading ? (
+        <span className={cn("flex shrink-0 items-center text-graphite [&_svg]:size-4", twoLine ? "h-5" : "h-6")}>{leading}</span>
+      ) : null}
+      {twoLine ? (
+        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span className="line-clamp-2 break-words leading-5">{children}</span>
+          <span className="line-clamp-1 text-[13px] text-pebble leading-[18px]">{description}</span>
+        </span>
+      ) : (
+        <span className="min-w-0 flex-1 truncate">{children}</span>
+      )}
+      <span className={cn("flex size-4 shrink-0 items-center", twoLine && "h-5")}>
+        <ComboboxPrimitive.ItemIndicator className="text-meadow" {...indicatorProps}>
+          <svg
+            aria-hidden="true"
+            fill="none"
+            height="16"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="16"
+          >
+            <path d="M5.252 12.7 10.2 18.63 18.748 5.37" />
+          </svg>
+        </ComboboxPrimitive.ItemIndicator>
+      </span>
     </ComboboxPrimitive.Item>
   );
 }
@@ -154,6 +204,20 @@ export function ComboboxEmpty({ className, ...props }: ComboboxPrimitive.Empty.P
     />
   );
 }
+
+/** "Searching…" while results load, for lists fetched as you type. Collapses when empty. */
+export function ComboboxStatus({ className, ...props }: ComboboxPrimitive.Status.Props): React.ReactElement {
+  return (
+    <ComboboxPrimitive.Status
+      className={cn("px-3 py-2 text-[15px] text-pebble empty:m-0 empty:p-0", className)}
+      data-slot="combobox-status"
+      {...props}
+    />
+  );
+}
+
+/** The picked option, for showing it somewhere else: its flag in the input, say. Renders no element. */
+export const ComboboxValue: typeof ComboboxPrimitive.Value = ComboboxPrimitive.Value;
 
 /** Renders a group's own items inside ComboboxGroup, for grouped lists. */
 export const ComboboxCollection: typeof ComboboxPrimitive.Collection = ComboboxPrimitive.Collection;
