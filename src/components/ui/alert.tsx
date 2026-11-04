@@ -3,7 +3,7 @@ import { cn } from "cn";
 import type * as React from "react";
 
 const alertVariants = cva(
-  "relative grid w-full items-start gap-x-2 gap-y-0.5 rounded-xl border px-3.5 py-3 text-card-foreground text-sm has-[>svg]:has-data-[slot=alert-action]:grid-cols-[calc(var(--spacing)*4)_1fr_auto] has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-data-[slot=alert-action]:grid-cols-[1fr_auto] has-[>svg]:gap-x-2 [&>svg]:h-lh [&>svg]:w-4",
+  "relative grid w-full items-start gap-x-2 gap-y-0.5 squircle px-4 py-3.5 text-card-foreground text-sm [--sq:var(--radius-xl)] has-[>svg]:has-data-[slot=alert-action]:grid-cols-[calc(var(--spacing)*4)_1fr_auto] has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-data-[slot=alert-action]:grid-cols-[1fr_auto] has-[>svg]:gap-x-2 [&>svg]:h-lh [&>svg]:w-4",
   {
     defaultVariants: {
       variant: "default",
@@ -11,12 +11,12 @@ const alertVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-transparent dark:bg-input/32 [&>svg]:text-muted-foreground",
+          "bg-white shadow-[inset_0_0_0_1px_var(--hairline)] [&>svg]:text-pebble [&_[data-slot=alert-description]]:text-graphite",
         error:
-          "border-destructive/32 bg-destructive/4 [&>svg]:text-destructive",
-        info: "border-info/32 bg-info/4 [&>svg]:text-info",
-        success: "border-success/32 bg-success/4 [&>svg]:text-success",
-        warning: "border-warning/32 bg-warning/4 [&>svg]:text-warning",
+          "bg-danger-soft text-danger-ink [&>svg]:text-danger",
+        info: "bg-info-soft text-ink [&>svg]:text-graphite [&_[data-slot=alert-description]]:text-graphite",
+        success: "bg-success-soft text-success-ink [&>svg]:text-success",
+        warning: "bg-warning-soft text-warning-ink [&>svg]:text-warning",
       },
     },
   },
@@ -58,7 +58,8 @@ export function AlertDescription({
   return (
     <div
       className={cn(
-        "flex flex-col gap-2.5 text-muted-foreground [svg~&]:col-start-2",
+        // Same colour as the title, so a tinted alert reads as one message.
+        "flex flex-col gap-2.5 [svg~&]:col-start-2",
         className,
       )}
       data-slot="alert-description"

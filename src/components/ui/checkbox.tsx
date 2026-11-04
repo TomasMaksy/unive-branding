@@ -4,6 +4,11 @@ import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { cn } from "cn";
 import type React from "react";
 
+/**
+ * iOS-style checkbox: a small white squircle with a hairline that fills
+ * meadow when checked (like the switch), the tick drawing itself in. It
+ * dips on press and springs back.
+ */
 export function Checkbox({
   className,
   ...props
@@ -11,53 +16,35 @@ export function Checkbox({
   return (
     <CheckboxPrimitive.Root
       className={cn(
-        "relative inline-flex size-4.5 shrink-0 items-center justify-center rounded-[.25rem] border border-input bg-background not-dark:bg-clip-padding shadow-xs/5 outline-none ring-ring transition-shadow before:pointer-events-none before:absolute before:inset-0 before:rounded-[3px] not-data-disabled:not-data-checked:not-aria-invalid:before:shadow-[0_1px_--theme(--color-black/4%)] focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-background aria-invalid:border-destructive/36 focus-visible:aria-invalid:border-destructive/64 focus-visible:aria-invalid:ring-destructive/48 data-disabled:cursor-not-allowed data-disabled:opacity-64 sm:size-4 dark:not-data-checked:bg-input/32 dark:aria-invalid:ring-destructive/24 dark:not-data-disabled:not-data-checked:not-aria-invalid:before:shadow-[0_-1px_--theme(--color-white/6%)] [[data-disabled],[data-checked],[aria-invalid]]:shadow-none",
+        "group/checkbox squircle relative inline-flex size-5.5 shrink-0 cursor-pointer items-center justify-center bg-white shadow-[inset_0_0_0_1.5px_var(--hairline-strong)] outline-none [--sq:6px] [transition:scale_320ms_cubic-bezier(.3,1.4,.5,1),background-color_180ms_ease-out,box-shadow_180ms_ease-out]",
+        "hover:shadow-[inset_0_0_0_1.5px_var(--pebble)] active:not-data-disabled:scale-[0.86] active:not-data-disabled:duration-100",
+        "data-checked:bg-meadow data-checked:shadow-none data-indeterminate:bg-meadow data-indeterminate:shadow-none",
+        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "aria-invalid:shadow-[inset_0_0_0_1.5px_var(--danger)] data-disabled:cursor-not-allowed data-disabled:opacity-48",
         className,
       )}
       data-slot="checkbox"
       {...props}
     >
       <CheckboxPrimitive.Indicator
-        className="absolute -inset-px flex items-center justify-center rounded-[.25rem] text-primary-foreground data-unchecked:hidden data-checked:bg-primary data-indeterminate:text-foreground"
+        keepMounted
+        className="pointer-events-none absolute inset-0 flex items-center justify-center text-white"
         data-slot="checkbox-indicator"
-        render={(
-          props: React.ComponentProps<"span">,
-          state: CheckboxPrimitive.Indicator.State,
-        ) => (
+        render={(props: React.ComponentProps<"span">, state: CheckboxPrimitive.Indicator.State) => (
           <span {...props}>
-            {state.indeterminate ? (
-              <svg
-                aria-hidden="true"
-                className="size-3.5 sm:size-3"
-                fill="none"
-                height="24"
+            <svg aria-hidden="true" className="size-3.5" fill="none" viewBox="0 0 24 24">
+              <path
+                d={state.indeterminate ? "M6 12h12" : "M5.5 12.5 10 17 18.5 7"}
+                pathLength={1}
                 stroke="currentColor"
+                strokeDasharray="1"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="3"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M5.252 12h13.496" />
-              </svg>
-            ) : (
-              <svg
-                aria-hidden="true"
-                className="size-3.5 sm:size-3"
-                fill="none"
-                height="24"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="3"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M5.252 12.7 10.2 18.63 18.748 5.37" />
-              </svg>
-            )}
+                // The tick draws itself in on check, and is gone at once on uncheck.
+                className="[stroke-dashoffset:1] group-data-checked/checkbox:[stroke-dashoffset:0] group-data-indeterminate/checkbox:[stroke-dashoffset:0] group-data-checked/checkbox:[transition:stroke-dashoffset_260ms_cubic-bezier(.65,0,.35,1)_60ms] group-data-indeterminate/checkbox:[transition:stroke-dashoffset_220ms_ease-out]"
+              />
+            </svg>
           </span>
         )}
       />

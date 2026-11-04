@@ -5,13 +5,14 @@ import { RIBBON_BOX, ribbonPath } from "@/lib/un-wave";
 import { useLoop } from "./use-loop";
 
 /**
- * Progress as handwriting: an "ununun" wave written left to right up to
+ * Progress as handwriting: an "ununun" wave, at the logo's stroke weight,
+ * written left to right up to
  * `value` (0-100), flowing gently while it waits. Leave `value` undefined
  * for indeterminate: it writes, lifts off and writes again.
  */
 export function UnProgress({
   value,
-  periods = 4,
+  periods = 6,
   className,
   label = "Progress",
 }: {

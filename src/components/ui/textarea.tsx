@@ -23,7 +23,7 @@ export function Textarea({
       className={
         cn(
           !unstyled &&
-            "relative flex w-full min-w-0 max-w-full overflow-x-hidden rounded-lg border border-input bg-background not-dark:bg-clip-padding text-base text-foreground shadow-xs/5 ring-ring/24 transition-shadow before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] has-focus-visible:has-aria-invalid:border-destructive/64 has-focus-visible:has-aria-invalid:ring-destructive/16 has-aria-invalid:border-destructive/36 has-focus-visible:border-ring has-disabled:opacity-64 has-[:disabled,:focus-visible,[aria-invalid]]:shadow-none has-focus-visible:ring-[3px] not-has-disabled:has-not-focus-visible:not-has-aria-invalid:before:shadow-[0_1px_--theme(--color-black/4%)] sm:text-sm dark:bg-input/32 dark:has-aria-invalid:ring-destructive/24 dark:not-has-disabled:has-not-focus-visible:not-has-aria-invalid:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+            cn("flex min-w-0 max-w-full overflow-x-hidden squircle [--sq:var(--radius-lg)]", "relative w-full bg-mist text-[15px] text-foreground transition-[background-color,box-shadow] duration-200 hover:bg-mist-hover has-focus-visible:bg-white has-focus-visible:shadow-[0_0_0_1.5px_var(--meadow),0_0_0_5px_color-mix(in_oklab,var(--meadow)_16%,transparent)] has-aria-invalid:bg-danger-soft has-aria-invalid:shadow-[0_0_0_1.5px_var(--danger)] has-focus-visible:has-aria-invalid:bg-white has-focus-visible:has-aria-invalid:shadow-[0_0_0_1.5px_var(--danger),0_0_0_5px_color-mix(in_oklab,var(--danger)_16%,transparent)] has-disabled:opacity-48"),
           !unstyled && className,
         ) || undefined
       }
@@ -41,14 +41,10 @@ export function Textarea({
           <textarea
             className={cn(
               "field-sizing-content w-full min-w-0 max-w-full break-words rounded-[inherit] outline-none [overflow-wrap:anywhere]",
-              !unstyled &&
-                "min-h-17.5 px-[calc(--spacing(3)-1px)] py-[calc(--spacing(1.5)-1px)] max-sm:min-h-20.5",
-              !unstyled &&
-                size === "sm" &&
-                "min-h-16.5 px-[calc(--spacing(2.5)-1px)] py-[calc(--spacing(1)-1px)] max-sm:min-h-19.5",
-              !unstyled &&
-                size === "lg" &&
-                "min-h-18.5 py-[calc(--spacing(2)-1px)] max-sm:min-h-21.5",
+              // Text starts 16 px in, like the input's, so a form lines up.
+              !unstyled && size === "default" && "min-h-24 px-4 py-2.5 placeholder:text-pebble",
+              !unstyled && size === "sm" && "min-h-20 px-3.5 py-2 text-sm placeholder:text-pebble",
+              !unstyled && size === "lg" && "min-h-28 px-5 py-3 text-base placeholder:text-pebble",
               unstyled && className,
             )}
             data-slot="textarea"

@@ -4,6 +4,8 @@ import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar";
 import { cn } from "cn";
 import type React from "react";
 
+/** A person: photo, or initials on mist. Size with className (size-6 to
+ *  size-16); tint a fallback meadow-soft for the student themself. */
 export function Avatar({
   className,
   ...props
@@ -11,7 +13,7 @@ export function Avatar({
   return (
     <AvatarPrimitive.Root
       className={cn(
-        "inline-flex size-8 shrink-0 select-none items-center justify-center overflow-hidden rounded-full bg-background align-middle font-medium text-xs",
+        "inline-flex size-8 shrink-0 select-none items-center justify-center overflow-hidden rounded-full bg-mist align-middle font-medium text-ink text-xs",
         className,
       )}
       data-slot="avatar"
@@ -40,7 +42,7 @@ export function AvatarFallback({
   return (
     <AvatarPrimitive.Fallback
       className={cn(
-        "flex size-full items-center justify-center rounded-full bg-muted",
+        "flex size-full items-center justify-center rounded-full bg-mist text-ink",
         className,
       )}
       data-slot="avatar-fallback"

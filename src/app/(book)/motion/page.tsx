@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { UnLoader } from "@/components/brand/un-loader";
 import { UnProgress } from "@/components/brand/un-progress";
 import { PageHeader, Section, Specimen } from "@/components/book/section";
+import { PressToLoad } from "@/components/book/press-to-load";
 import { Button } from "@/components/ui/button";
-import { BrandPlayer } from "@/remotion/player";
 import { ProgressDemo } from "./progress-demo";
+import { WordmarkDemo } from "./wordmark-demo";
 
 export const metadata: Metadata = { title: "Motion" };
 
@@ -49,6 +50,16 @@ export default function MotionPage() {
           <Specimen label="On meadow" tone="meadow">
             <UnLoader size={72} className="text-paper" />
           </Specimen>
+          <div className="md:col-span-2">
+            <Specimen
+              label="Write the name"
+              note="<WordmarkWrite text=&quot;unive&quot; | &quot;unive.ai&quot; />. The pen writes the whole lockup in the drawing’s own strokes, taps the dots, holds, then lifts it off. The “.ai” is built from the same hand: the n’s leg and the i, with a new bowl for the a."
+              tone="paper"
+              className="min-h-96"
+            >
+              <WordmarkDemo />
+            </Specimen>
+          </div>
         </div>
 
         <div className="mt-4 grid gap-4 md:grid-cols-3">
@@ -65,11 +76,19 @@ export default function MotionPage() {
               Reading your essay…
             </p>
           </Specimen>
-          <Specimen label="In a button" tone="white">
-            <Button variant="brand" className="h-11 gap-2.5 px-5" disabled>
-              <UnLoader size={16} label="" />
-              Saving
-            </Button>
+          <Specimen label="Generating" note={'<Button variant="stone" loading loadingLabel="…" />'} tone="white">
+            <Button variant="stone" size="lg" loading loadingLabel="Generating" />
+          </Specimen>
+        </div>
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <Specimen label="Press to load" note="The label turns into the “un”, then comes back." tone="white">
+            <PressToLoad size="lg">Save essay</PressToLoad>
+          </Specimen>
+          <Specimen label="On meadow" note="Same morph, any variant." tone="white">
+            <PressToLoad variant="meadow" size="lg">Build my plan</PressToLoad>
+          </Specimen>
+          <Specimen label="Outline" tone="white">
+            <PressToLoad variant="outline" size="lg">Check grammar</PressToLoad>
           </Specimen>
         </div>
       </Section>
@@ -89,44 +108,8 @@ export default function MotionPage() {
       </Section>
 
       <Section
-        title="Video"
-        description={
-          <>
-            Remotion compositions in <code>src/remotion/</code>, built on the same geometry: a brand sting for videos and
-            socials, and both loaders as square loops. Every frame is computed, so renders are identical.
-          </>
-        }
-      >
-        <div className="flex flex-col gap-4">
-          <figure className="flex flex-col gap-3">
-            <div className="overflow-hidden rounded-2xl shadow-warm">
-              <BrandPlayer id="sting" controls />
-            </div>
-            <figcaption className="px-1 text-sm">
-              <span className="font-medium text-ink">Brand sting</span>
-              <span className="text-pebble"> · 1920×1080, 5 s. Written, flows one wave, then the horizon rises under the wordmark.</span>
-            </figcaption>
-          </figure>
-          <div className="grid gap-4 md:grid-cols-2">
-            <figure className="flex flex-col gap-3">
-              <div className="overflow-hidden rounded-2xl shadow-warm">
-                <BrandPlayer id="flow" />
-              </div>
-              <figcaption className="px-1 font-medium text-ink text-sm">Flow loop · 1080×1080</figcaption>
-            </figure>
-            <figure className="flex flex-col gap-3">
-              <div className="overflow-hidden rounded-2xl shadow-warm">
-                <BrandPlayer id="write" />
-              </div>
-              <figcaption className="px-1 font-medium text-ink text-sm">Write loop · 1080×1080</figcaption>
-            </figure>
-          </div>
-        </div>
-      </Section>
-
-      <Section
         title="Easing and timing"
-        description="One curve for nearly everything: the hero’s cubic-bezier(0.22, 1, 0.36, 1). It starts quickly and lands softly. No overshoot and no bounce, anywhere."
+        description="One curve for nearly everything: the hero’s cubic-bezier(0.22, 1, 0.36, 1). It starts quickly and lands softly. Controls you press (buttons, switches) spring back with a slight overshoot, as on iOS; nothing else overshoots, and nothing bounces."
       >
         <div className="grid gap-4 md:grid-cols-[1fr_2fr]">
           <Specimen label="--ease-unive" note="cubic-bezier(0.22, 1, 0.36, 1)" tone="white" className="min-h-72">

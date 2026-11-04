@@ -59,13 +59,15 @@ export function MenuPopup({
       >
         <MenuPrimitive.Popup
           className={cn(
-            "relative flex not-[class*='w-']:min-w-32 origin-(--transform-origin) rounded-lg border bg-popover not-dark:bg-clip-padding shadow-lg/5 outline-none before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] focus:outline-none dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+            // Same family as the dialog: one white squircle, a soft warm shadow
+            // and a faint edge so it holds on white cards too.
+            "squircle relative flex not-[class*='w-']:min-w-52 origin-(--transform-origin) bg-white text-ink [--sq:var(--radius-xl)] shadow-[0_12px_40px_rgb(29_27_24/0.14),0_0_0_1px_rgb(29_27_24/0.06)] outline-none transition-[scale,opacity] duration-200 ease-unive data-ending-style:scale-96 data-starting-style:scale-96 data-ending-style:opacity-0 data-starting-style:opacity-0 focus:outline-none",
             className,
           )}
           data-slot="menu-popup"
           {...props}
         >
-          <div className="max-h-(--available-height) w-full overflow-y-auto p-1">
+          <div className="max-h-(--available-height) w-full overflow-y-auto p-1.5">
             {children}
           </div>
         </MenuPrimitive.Popup>
@@ -80,6 +82,20 @@ export function MenuGroup(
   return <MenuPrimitive.Group data-slot="menu-group" {...props} />;
 }
 
+/** Every row in a menu: a 36 px squircle, mist when highlighted, 15 px text,
+ *  16 px pebble icons. Items, choices and submenu triggers all share it. */
+const ROW =
+  "squircle flex min-h-9 select-none items-center gap-2.5 px-3 py-1.5 text-[15px] text-ink outline-none transition-colors duration-100 [--sq:var(--radius-md)] data-disabled:pointer-events-none data-highlighted:bg-mist data-inset:ps-9.5 data-disabled:opacity-48 [&>svg:not([class*='size-'])]:size-4 [&>svg]:pointer-events-none [&>svg]:shrink-0 [&>svg]:text-pebble";
+
+/** The select's tick: meadow, on the right where a chevron would be. */
+function Tick() {
+  return (
+    <svg aria-hidden="true" className="size-4 text-meadow" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
+      <path d="M5.252 12.7 10.2 18.63 18.748 5.37" />
+    </svg>
+  );
+}
+
 export function MenuItem({
   className,
   inset,
@@ -92,7 +108,8 @@ export function MenuItem({
   return (
     <MenuPrimitive.Item
       className={cn(
-        "flex min-h-8 cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1 text-base text-foreground outline-none data-disabled:pointer-events-none data-highlighted:bg-accent data-inset:ps-8 data-[variant=destructive]:text-destructive-foreground data-highlighted:text-accent-foreground data-disabled:opacity-64 sm:min-h-7 sm:text-sm [&>svg:not([class*='opacity-'])]:opacity-80 [&>svg:not([class*='size-'])]:size-4.5 sm:[&>svg:not([class*='size-'])]:size-4 [&>svg]:pointer-events-none [&>svg]:-mx-0.5 [&>svg]:shrink-0",
+        ROW,
+        "cursor-pointer data-[variant=destructive]:text-danger data-[variant=destructive]:data-highlighted:bg-danger-soft data-[variant=destructive]:[&>svg]:text-danger",
         className,
       )}
       data-inset={inset}
@@ -110,51 +127,32 @@ export function MenuCheckboxItem({
   variant = "default",
   ...props
 }: MenuPrimitive.CheckboxItem.Props & {
+  /** "switch": a small meadow switch on the right instead of a tick. */
   variant?: "default" | "switch";
 }): React.ReactElement {
   return (
     <MenuPrimitive.CheckboxItem
       checked={checked}
-      className={cn(
-        "grid min-h-8 in-data-[side=none]:min-w-[calc(var(--anchor-width)+1.25rem)] cursor-default items-center gap-2 rounded-sm py-1 ps-2 text-base text-foreground outline-none data-disabled:pointer-events-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:opacity-64 sm:min-h-7 sm:text-sm [&_svg:not([class*='size-'])]:size-4.5 sm:[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-        variant === "switch"
-          ? "grid-cols-[1fr_auto] gap-4 pe-1.5"
-          : "grid-cols-[.75rem_1fr] pe-4",
-        className,
-      )}
+      className={cn(ROW, "cursor-pointer justify-between gap-4", className)}
       data-slot="menu-checkbox-item"
+      data-variant={variant}
       {...props}
     >
+      <span className="flex min-w-0 items-center gap-2.5 [&>svg:not([class*='size-'])]:size-4 [&>svg]:shrink-0 [&>svg]:text-pebble">{children}</span>
       {variant === "switch" ? (
-        <>
-          <span className="col-start-1">{children}</span>
-          <MenuPrimitive.CheckboxItemIndicator
-            className="inset-shadow-[0_1px_--theme(--color-black/4%)] inline-flex h-[calc(var(--thumb-size)+2px)] w-[calc(var(--thumb-size)*2-2px)] shrink-0 items-center rounded-full p-px outline-none transition-[background-color,box-shadow] duration-200 [--thumb-size:--spacing(4)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background data-checked:bg-primary data-unchecked:bg-input data-disabled:opacity-64 sm:[--thumb-size:--spacing(3)]"
-            keepMounted
-          >
-            <span className="pointer-events-none block aspect-square h-full in-[[data-slot=menu-checkbox-item][data-checked]]:origin-[var(--thumb-size)_50%] origin-left in-[[data-slot=menu-checkbox-item][data-checked]]:translate-x-[calc(var(--thumb-size)-4px)] in-[[data-slot=menu-checkbox-item]:active]:not-data-disabled:scale-x-110 in-[[data-slot=menu-checkbox-item]:active]:rounded-[var(--thumb-size)/calc(var(--thumb-size)*1.10)] rounded-(--thumb-size) bg-background shadow-sm/5 will-change-transform [transition:translate_.15s,border-radius_.15s,scale_.1s_.1s,transform-origin_.15s]" />
-          </MenuPrimitive.CheckboxItemIndicator>
-        </>
+        // The Switch, at menu size: meadow when on, the thumb springs across.
+        <span
+          aria-hidden
+          className="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full bg-input p-0.5 transition-colors duration-300 ease-unive in-data-checked:bg-meadow"
+        >
+          <span className="block size-4 rounded-full bg-white shadow-[0_1px_3px_rgb(43_32_24/0.18)] transition-[translate] duration-[420ms] ease-[cubic-bezier(.3,1.35,.45,1)] in-data-checked:translate-x-3" />
+        </span>
       ) : (
-        <>
-          <MenuPrimitive.CheckboxItemIndicator className="col-start-1 -ms-0.5">
-            <svg
-              aria-hidden="true"
-              fill="none"
-              height="24"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              width="24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M5.252 12.7 10.2 18.63 18.748 5.37" />
-            </svg>
+        <span className="grid size-4 shrink-0 place-items-center">
+          <MenuPrimitive.CheckboxItemIndicator>
+            <Tick />
           </MenuPrimitive.CheckboxItemIndicator>
-          <span className="col-start-2">{children}</span>
-        </>
+        </span>
       )}
     </MenuPrimitive.CheckboxItem>
   );
@@ -173,30 +171,16 @@ export function MenuRadioItem({
 }: MenuPrimitive.RadioItem.Props): React.ReactElement {
   return (
     <MenuPrimitive.RadioItem
-      className={cn(
-        "grid min-h-8 in-data-[side=none]:min-w-[calc(var(--anchor-width)+1.25rem)] cursor-default grid-cols-[.75rem_1fr] items-center gap-2 rounded-sm py-1 ps-2 pe-4 text-base text-foreground outline-none data-disabled:pointer-events-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:opacity-64 sm:min-h-7 sm:text-sm [&_svg:not([class*='size-'])]:size-4.5 sm:[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-        className,
-      )}
+      className={cn(ROW, "cursor-pointer justify-between gap-4", className)}
       data-slot="menu-radio-item"
       {...props}
     >
-      <MenuPrimitive.RadioItemIndicator className="col-start-1 -ms-0.5">
-        <svg
-          aria-hidden="true"
-          fill="none"
-          height="24"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          width="24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M5.252 12.7 10.2 18.63 18.748 5.37" />
-        </svg>
-      </MenuPrimitive.RadioItemIndicator>
-      <span className="col-start-2">{children}</span>
+      <span className="flex min-w-0 items-center gap-2.5 [&>svg:not([class*='size-'])]:size-4 [&>svg]:shrink-0 [&>svg]:text-pebble">{children}</span>
+      <span className="grid size-4 shrink-0 place-items-center">
+        <MenuPrimitive.RadioItemIndicator>
+          <Tick />
+        </MenuPrimitive.RadioItemIndicator>
+      </span>
     </MenuPrimitive.RadioItem>
   );
 }
@@ -211,7 +195,7 @@ export function MenuGroupLabel({
   return (
     <MenuPrimitive.GroupLabel
       className={cn(
-        "px-2 py-1.5 font-medium text-muted-foreground text-xs data-inset:ps-9 sm:data-inset:ps-8",
+        "px-3 pt-2 pb-1 font-medium text-[11px] text-pebble uppercase tracking-[0.08em] data-inset:ps-9.5",
         className,
       )}
       data-inset={inset}
@@ -227,7 +211,7 @@ export function MenuSeparator({
 }: MenuPrimitive.Separator.Props): React.ReactElement {
   return (
     <MenuPrimitive.Separator
-      className={cn("mx-2 my-1 h-px bg-border", className)}
+      className={cn("mx-3 my-1.5 h-px bg-(--hairline)", className)}
       data-slot="menu-separator"
       {...props}
     />
@@ -241,7 +225,7 @@ export function MenuShortcut({
   return (
     <kbd
       className={cn(
-        "ms-auto font-medium font-sans text-muted-foreground/72 text-xs tracking-widest",
+        "ms-auto ps-4 font-sans text-[13px] text-pebble tracking-wide",
         className,
       )}
       data-slot="menu-shortcut"
@@ -267,7 +251,8 @@ export function MenuSubTrigger({
   return (
     <MenuPrimitive.SubmenuTrigger
       className={cn(
-        "flex min-h-8 items-center gap-2 rounded-sm px-2 py-1 text-base text-foreground outline-none data-disabled:pointer-events-none data-highlighted:bg-accent data-popup-open:bg-accent data-inset:ps-8 data-highlighted:text-accent-foreground data-popup-open:text-accent-foreground data-disabled:opacity-64 sm:min-h-7 sm:text-sm [&>svg:not(:last-child)]:-mx-0.5 [&_svg:not([class*='size-'])]:size-4.5 sm:[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none",
+        ROW,
+        "cursor-pointer data-popup-open:bg-mist",
         className,
       )}
       data-inset={inset}
@@ -275,7 +260,7 @@ export function MenuSubTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="ms-auto -me-0.5 opacity-80" />
+      <ChevronRightIcon className="ms-auto -me-0.5" />
     </MenuPrimitive.SubmenuTrigger>
   );
 }

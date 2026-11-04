@@ -12,7 +12,8 @@ export function Card({
 }: useRender.ComponentProps<"div">): React.ReactElement {
   const defaultProps = {
     className: cn(
-      "relative flex flex-col rounded-2xl border bg-card not-dark:bg-clip-padding text-card-foreground shadow-xs/5 before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-2xl)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+      // The brand card: a white squircle on paper with the warm shadow, no border.
+      "relative flex flex-col squircle bg-white text-ink shadow-warm [--sq:28px]",
       className,
     ),
     "data-slot": "card",
@@ -32,7 +33,9 @@ export function CardFrame({
 }: useRender.ComponentProps<"div">): React.ReactElement {
   const defaultProps = {
     className: cn(
-      "relative flex flex-col rounded-2xl border bg-card not-dark:bg-clip-padding text-card-foreground shadow-xs/5 [--clip-bottom:-1rem] [--clip-top:-1rem] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-2xl)-1px)] before:bg-muted/72 before:shadow-[0_1px_--theme(--color-black/4%)] has-data-[slot=table-container]:overflow-hidden *:data-[slot=card]:-m-px *:data-[slot=table-container]:-m-px *:data-[slot=table-container]:w-[calc(100%+2px)] *:not-first:data-[slot=card]:rounded-t-xl *:not-last:data-[slot=card]:rounded-b-xl *:data-[slot=card]:bg-clip-padding *:data-[slot=card]:shadow-none *:data-[slot=card]:before:hidden *:not-first:data-[slot=card]:before:rounded-t-[calc(var(--radius-xl)-1px)] *:not-last:data-[slot=card]:before:rounded-b-[calc(var(--radius-xl)-1px)] dark:before:shadow-[0_-1px_--theme(--color-white/6%)] *:data-[slot=card]:[clip-path:inset(var(--clip-top)_1px_var(--clip-bottom)_1px_round_calc(var(--radius-2xl)-1px))] *:data-[slot=card]:last:[--clip-bottom:1px] *:data-[slot=card]:first:[--clip-top:1px]",
+      // A mist tray that holds cards under one heading: the cards inside drop
+      // their shadow and sit 6 px apart, like grouped rows on iOS.
+      "relative flex flex-col gap-1.5 squircle bg-mist p-1.5 text-ink [--sq:32px] *:data-[slot=card]:shadow-none *:data-[slot=card]:[--sq:24px]",
       className,
     ),
     "data-slot": "card-frame",
@@ -52,7 +55,7 @@ export function CardFrameHeader({
 }: useRender.ComponentProps<"div">): React.ReactElement {
   const defaultProps = {
     className: cn(
-      "relative flex grid auto-rows-min grid-rows-[auto_auto] flex-col items-start gap-x-4 px-6 py-4 has-data-[slot=card-frame-action]:grid-cols-[1fr_auto]",
+      "relative grid auto-rows-min grid-rows-[auto_auto] items-start gap-x-4 gap-y-0.5 px-4.5 pt-3 pb-1.5 has-data-[slot=card-frame-action]:grid-cols-[1fr_auto]",
       className,
     ),
     "data-slot": "card-frame-header",
@@ -71,7 +74,7 @@ export function CardFrameTitle({
   ...props
 }: useRender.ComponentProps<"div">): React.ReactElement {
   const defaultProps = {
-    className: cn("self-center font-semibold text-sm", className),
+    className: cn("self-center font-medium text-ink text-sm", className),
     "data-slot": "card-frame-title",
   };
 
@@ -88,7 +91,7 @@ export function CardFrameDescription({
   ...props
 }: useRender.ComponentProps<"div">): React.ReactElement {
   const defaultProps = {
-    className: cn("self-center text-muted-foreground text-sm", className),
+    className: cn("self-center text-pebble text-[13px]", className),
     "data-slot": "card-frame-description",
   };
 
@@ -125,7 +128,7 @@ export function CardFrameFooter({
   ...props
 }: useRender.ComponentProps<"div">): React.ReactElement {
   const defaultProps = {
-    className: cn("px-6 py-4", className),
+    className: cn("px-4.5 pt-1.5 pb-3 text-graphite text-sm", className),
     "data-slot": "card-frame-footer",
   };
 
@@ -162,7 +165,7 @@ export function CardTitle({
   ...props
 }: useRender.ComponentProps<"div">): React.ReactElement {
   const defaultProps = {
-    className: cn("font-semibold text-lg leading-none", className),
+    className: cn("font-heading font-light text-2xl text-ink leading-tight tracking-[-0.03em]", className),
     "data-slot": "card-title",
   };
 
@@ -173,13 +176,14 @@ export function CardTitle({
   });
 }
 
+/** Metadata under the title: smaller and quieter than the card's body. */
 export function CardDescription({
   className,
   render,
   ...props
 }: useRender.ComponentProps<"div">): React.ReactElement {
   const defaultProps = {
-    className: cn("text-muted-foreground text-sm", className),
+    className: cn("text-[13px] text-muted-foreground leading-relaxed", className),
     "data-slot": "card-description",
   };
 

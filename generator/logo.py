@@ -229,7 +229,7 @@ def main():
     write("app-icon-paper.svg", svg(trace(ic), ib, bg=PAPER))
     write("app-icon-meadow.svg", svg(trace(ic), ib, fill=PAPER, bg=MEADOW))
     fb = square(ic, 0.8)
-    write("favicon.svg", svg(trace(ic), fb, fill=PAPER, bg=INK, rx=round(fb[2] * 0.22)))
+    write("favicon.svg", svg(trace(ic), fb, fill=PAPER, bg=MEADOW, rx=round(fb[2] * 0.22)))  # meadow: it stands out in a row of tabs
     # The same paths for React (src/components/brand/logo.tsx).
     LIB.mkdir(parents=True, exist_ok=True)
     (LIB / "logo-paths.json").write_text(json.dumps({

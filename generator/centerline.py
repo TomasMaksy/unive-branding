@@ -17,6 +17,7 @@ import cv2
 import numpy as np
 
 import logo as T
+import strokefit as F
 
 OUT = pathlib.Path(__file__).resolve().parent.parent / "src" / "lib" / "un-geometry.json"
 
@@ -114,19 +115,24 @@ def main():
     a, b = np.searchsorted(s, 650), np.searchsorted(s, 1302)
     guide = np.vstack([sk[:a:12], np.array(SQUIGGLE, float), sk[b + 10::12], sk[-1:]])
     P = resample(catmull(guide), 2)
-    W = np.array([dist[int(round(y * 2)), int(round(x * 2))] for x, y in P])
     P = np.stack([gauss(P[:, 0], 7), gauss(P[:, 1], 7)], 1)
-    # Near the slit tips the distance transform reads the slit as an edge and
-    # thins the stem; no stem in the drawing is thinner than r = 42.
-    R = gauss(np.maximum(W, 42), 10) * 1.03  # stroke radius
-
-    # Fit check against the traced icon.
-    rec = np.zeros((m.shape[0] // 4, m.shape[1] // 4), np.uint8)
-    for (x, y), r in zip(P, R):
-        cv2.circle(rec, (int(round(x)), int(round(y))), int(round(r)), 1, -1)
-    orig = cv2.resize(m, (rec.shape[1], rec.shape[0]), interpolation=cv2.INTER_AREA) > 0
-    r = rec.astype(bool)
-    print(f"fit IoU {(r & orig).sum() / (r | orig).sum():.3f}")
+    # Fit the stroke to the drawing: centre between its edges, radius half
+    # its width. The squiggle is two pen passes merged into one blob with
+    # slits, which the edge fit can't separate, so its hand guides hold and
+    # its radius is the inscribed disc (as drawn, never thinner than 42).
+    i0 = int(np.argmin(np.hypot(*(P - SQUIGGLE[0]).T)))
+    i1 = int(np.argmin(np.hypot(*(P - SQUIGGLE[-1]).T)))
+    idx = np.arange(len(P))
+    keep = np.clip(np.maximum(i0 - idx, idx - i1) / 20, 0, 1)
+    P, R = F.fit(P, small, 2.0, keep=keep)
+    W = np.array([dist[int(round(y * 2)), int(round(x * 2))] for x, y in P])
+    held = gauss(np.maximum(W, 42), 10) * 1.03
+    R = F.calm(R * keep + held * (1 - keep), P)
+    P, R = F.ridge(P, R, small, 2.0, keep)
+    P, R = F.extend_caps(P, R, small, 2.0)
+    P, R = F.resample(P, 2, R)
+    score, _ = F.iou(P, R, m, T.S)
+    print(f"fit IoU {score:.4f}")
 
     # One period of the wave: from stem 1 to stem 5, both cut where they
     # descend through the same height, so the pattern tiles seamlessly.

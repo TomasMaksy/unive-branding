@@ -1,6 +1,6 @@
 # unive-brand
 
-The Unive brand in one place: logo, loaders, colour, type, gradients, imagery
+The Unive brand in one place: logo, loaders, colour, type, imagery
 and UI components. It's a small Next.js site (the brand book), and its source
 is what other apps copy from.
 
@@ -14,11 +14,10 @@ bun run build        # production build + typecheck
 
 | Path | What it holds |
 | --- | --- |
-| `src/app/globals.css` | **All brand tokens**: colours (paper, ink, earth, meadow, sky, states), gradients, shadows, radius, easing. The only place a hex should appear |
+| `src/app/globals.css` | **All brand tokens**: colours (neutrals, meadow, states), the ink scrim, shadows, radius, easing. The only place a hex should appear |
 | `src/components/ui/` | Base UI + cva primitives (button, input, select, dialog, …), same API as unive-v22, themed by the tokens |
 | `src/components/brand/` | `Wordmark`, `Mark`, `AppIcon`, `UnLoader`, `UnProgress`, `HeroArt`, `PressBand` |
 | `src/lib/un-wave.ts` | The “un” as a wave: the geometry behind every loader |
-| `src/remotion/` | Remotion compositions: brand sting, flow loop, write loop |
 | `public/logo/` | SVG wordmark, icon, app icons, favicon (generated) |
 | `public/loaders/` | Self-contained looping SVG loaders, no JS (generated) |
 | `public/scenes/`, `public/landing/`, `public/brand/`, `public/features/` | Hero art, scenes and press logos, copied from unive-v22 |
@@ -41,10 +40,8 @@ The Python scripts need numpy and opencv-python.
 - The icon is “un” with **no dot**. Nothing ever animates the i’s dot.
 - The logo is drawn, never typed. Don't rebuild it in Averia or any font.
 - Motion uses one curve, `--ease-unive` (`cubic-bezier(0.22, 1, 0.36, 1)`), with no bounce or overshoot.
-- Sky blue is for links and focus only.
+- Meadow is the only accent; there is no blue.
 
 ## Licences
 
-Averia Serif Libre and Inter are OFL (Google Fonts). Remotion needs a paid
-company licence for companies above 3 people; check https://remotion.dev/license
-before rendering videos commercially.
+Averia Serif Libre and Inter are OFL (Google Fonts).

@@ -8,10 +8,10 @@ import {
   FileTextIcon,
   InfoIcon,
   PlusIcon,
-  SparklesIcon,
   StarIcon,
   TriangleAlertIcon,
 } from "lucide-react";
+import { useState } from "react";
 import { UnLoader } from "@/components/brand/un-loader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -58,19 +58,19 @@ export function Buttons() {
     <div className="grid gap-4 lg:grid-cols-2">
       <Panel title="Brand, for pages and big moments">
         <div className="flex flex-wrap items-center gap-3">
-          <Button variant="brand" className="h-12 px-7 text-base sm:h-12 sm:text-base">
+          <Button variant="brand" size="lg">
             Buy now
           </Button>
-          <Button variant="brand-outline" className="h-12 px-7 text-base sm:h-12 sm:text-base">
+          <Button variant="brand-outline" size="lg">
             Talk to us
           </Button>
-          <Button variant="brand" className="group h-12 gap-1.5 pr-6 pl-7 text-base sm:h-12 sm:text-base">
+          <Button variant="brand" size="lg" className="group gap-1.5 pr-5">
             Get started
             <ArrowRightIcon className="transition-transform duration-200 group-hover:translate-x-1" />
           </Button>
         </div>
         <p className="text-graphite text-xs leading-relaxed">
-          From the landing hero: ink fill, rounded-xl, grows 5% on hover. One per view.
+          Ink capsule that grows 4% on hover and sinks a touch when pressed. One per view.
         </p>
       </Panel>
       <Panel title="App, for everything inside the product">
@@ -81,7 +81,6 @@ export function Buttons() {
           <Button variant="ghost">Skip</Button>
           <Button variant="link">Learn more</Button>
           <Button variant="meadow">
-            <SparklesIcon />
             Build my plan
           </Button>
         </div>
@@ -125,7 +124,7 @@ export function Fields() {
         <div className="flex flex-col gap-2">
           <Label htmlFor="f-email">Parent email</Label>
           <Input id="f-email" defaultValue="alex@" aria-invalid />
-          <p className="text-destructive-foreground text-xs">Add the rest of the email address.</p>
+          <p className="text-[13px] text-danger-ink">Add the rest of the email address.</p>
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="f-note">Note to your counsellor</Label>
@@ -189,6 +188,28 @@ export function Fields() {
   );
 }
 
+/** An icon toggle: outlined when off, filled meadow when on. */
+function FavouriteToggle() {
+  const [on, setOn] = useState(false);
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={<Button variant="ghost" size="icon" aria-label="Favourite" aria-pressed={on} onClick={() => setOn((v) => !v)} />}
+      >
+        <StarIcon
+          className={on ? "scale-110 fill-meadow text-meadow" : "text-ink"}
+          style={{ transition: "scale 300ms cubic-bezier(.3,1.4,.5,1), color 160ms, fill 160ms" }}
+        />
+      </TooltipTrigger>
+      <TooltipPopup>{on ? "Remove from favourites" : "Add to favourites"}</TooltipPopup>
+    </Tooltip>
+  );
+}
+
+/** Toasts share the menu's surface: a white squircle with a soft shadow. */
+const TOAST =
+  "squircle flex gap-3 bg-white px-4 py-3.5 text-[15px] text-ink [--sq:var(--radius-xl)] shadow-[0_8px_28px_rgb(29_27_24/0.10),0_0_0_1px_rgb(29_27_24/0.06)]";
+
 export function Feedback() {
   return (
     <div className="grid gap-4 lg:grid-cols-2">
@@ -217,37 +238,28 @@ export function Feedback() {
       <div className="flex flex-col gap-4">
         <Panel title="Badges">
           <div className="flex flex-wrap gap-2">
-            <Badge>Default</Badge>
-            <Badge variant="outline">Outline</Badge>
-            <Badge variant="secondary">Secondary</Badge>
+            <Badge>Draft</Badge>
             <Badge variant="success">Accepted</Badge>
             <Badge variant="warning">Due soon</Badge>
             <Badge variant="error">Missing</Badge>
-            <Badge variant="info">New</Badge>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <span className="inline-flex items-center rounded-full bg-success-soft px-2.5 py-1 font-semibold text-success-foreground text-xs">Done</span>
-            <span className="inline-flex items-center rounded-full bg-meadow-soft px-2.5 py-1 font-semibold text-meadow-ink text-xs">Current</span>
-            <span className="inline-flex items-center rounded-full bg-paper-hover px-2.5 py-1 font-semibold text-graphite text-xs">Next</span>
-            <span className="inline-flex items-center rounded-full bg-paper px-2.5 py-1 font-semibold text-pebble text-xs">Upcoming</span>
-          </div>
-          <p className="text-graphite text-xs">Roadmap stages are pills; statuses are badges.</p>
+          <p className="text-graphite text-xs">Neutral, then the three states. That’s all a badge needs.</p>
         </Panel>
         <Panel title="Toasts">
           {[
-            { icon: <CircleCheckIcon className="size-4 text-success" />, t: "Saved", d: "Your changes are in." },
-            { icon: <CircleAlertIcon className="size-4 text-destructive" />, t: "Couldn’t connect", d: "We’ll retry in a moment." },
+            { icon: <CircleCheckIcon className="size-5 fill-success text-white" />, t: "Saved", d: "Your changes are in." },
+            { icon: <CircleAlertIcon className="size-5 fill-danger text-white" />, t: "Couldn’t connect", d: "We’ll retry in a moment." },
           ].map((x) => (
-            <div key={x.t} className="flex items-start gap-2.5 rounded-lg border bg-popover px-3.5 py-3 text-sm shadow-lg/5">
-              <span className="mt-0.5">{x.icon}</span>
+            <div key={x.t} className={`${TOAST} items-start`}>
+              <span>{x.icon}</span>
               <div className="flex flex-col">
                 <span className="font-medium">{x.t}</span>
-                <span className="text-muted-foreground">{x.d}</span>
+                <span className="text-graphite">{x.d}</span>
               </div>
             </div>
           ))}
-          <div className="flex items-center gap-2.5 rounded-lg border bg-popover px-3.5 py-3 text-sm shadow-lg/5">
-            <UnLoader size={14} className="text-ink" />
+          <div className={`${TOAST} items-center`}>
+            <span className="grid h-5 w-6 shrink-0 place-items-center"><UnLoader size={14} className="block text-ink" /></span>
             <span className="font-medium">Generating feedback…</span>
           </div>
         </Panel>
@@ -294,10 +306,10 @@ export function Overlays() {
                 <DialogDescription>Your counsellor will be notified and can start leaving notes.</DialogDescription>
               </DialogHeader>
               <DialogPanel>
-                <p className="text-graphite text-sm">“Why Yale” · 640 words · last edited 3 minutes ago</p>
+                <p className="squircle bg-mist px-4 py-3 text-graphite text-sm [--sq:var(--radius-xl)]">“Why Yale” · 640 words · edited 3 minutes ago</p>
               </DialogPanel>
               <DialogFooter>
-                <DialogClose render={<Button variant="ghost" />}>Not yet</DialogClose>
+                <DialogClose render={<Button variant="secondary" />}>Not yet</DialogClose>
                 <DialogClose render={<Button />}>Submit</DialogClose>
               </DialogFooter>
             </DialogPopup>
@@ -318,19 +330,14 @@ export function Overlays() {
               <MenuItem variant="destructive">Delete</MenuItem>
             </MenuPopup>
           </Menu>
-          <Tooltip>
-            <TooltipTrigger render={<Button variant="ghost" size="icon" aria-label="Favourite" />}>
-              <StarIcon />
-            </TooltipTrigger>
-            <TooltipPopup>Add to favourites</TooltipPopup>
-          </Tooltip>
+          <FavouriteToggle />
         </div>
         <Separator />
         <div className="flex items-center gap-3">
           <div className="flex -space-x-2">
             {["AM", "JL", "RK"].map((i, n) => (
               <Avatar key={i} className="ring-2 ring-white">
-                <AvatarFallback className={["bg-sand text-ink", "bg-meadow-soft text-meadow-ink", "bg-linen text-dusk"][n]}>{i}</AvatarFallback>
+                <AvatarFallback className={["bg-mist text-ink", "bg-meadow-soft text-meadow-ink", "bg-mist text-dusk"][n]}>{i}</AvatarFallback>
               </Avatar>
             ))}
           </div>
@@ -363,7 +370,7 @@ export function Cards() {
           <CardTitle>Card</CardTitle>
           <CardDescription>The base container in the app.</CardDescription>
         </CardHeader>
-        <CardPanel className="text-graphite text-sm">White on paper, rounded-2xl, a hairline border and a soft shadow.</CardPanel>
+        <CardPanel className="text-graphite text-sm">A white squircle on paper with the warm shadow. No border.</CardPanel>
         <CardFooter className="gap-2">
           <Button size="sm">Open</Button>
           <Button size="sm" variant="ghost">
@@ -378,10 +385,10 @@ export function Cards() {
           {[
             ["Yale", "Early action", "Nov 1", "bg-warning"],
             ["Brown", "Supplement", "Nov 3", "bg-meadow"],
-            ["MIT", "Portfolio", "Nov 12", "bg-clay"],
+            ["MIT", "Portfolio", "Nov 12", "bg-input"],
           ].map(([s, k, d, dot]) => (
-            <li key={s} className="flex items-center gap-3 rounded-lg px-1 py-2 hover:bg-surface-hover">
-              <span className={`size-2 rounded-full ${dot}`} />
+            <li key={s} className="group squircle -mx-2 flex items-center gap-3 px-2 py-2 transition-colors duration-150 ease-out [--sq:var(--radius-lg)] hover:bg-surface-hover">
+              <span className={`size-2 shrink-0 transition-transform duration-[260ms] ease-[cubic-bezier(.3,1.3,.5,1)] group-hover:translate-x-1 rounded-full ${dot}`} />
               <span className="flex-1 text-ink text-sm">
                 {s} <span className="text-pebble">· {k}</span>
               </span>
@@ -391,43 +398,55 @@ export function Cards() {
         </ul>
       </article>
 
-      <article className="flex flex-col items-start gap-3 rounded-2xl bg-white px-5 py-5 shadow-warm">
-        <div className="flex gap-0.5 text-[#F5B400]">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <StarIcon key={i} className="size-4 fill-current" strokeWidth={0} />
-          ))}
-        </div>
-        <p className="font-heading font-light text-ink text-lg leading-snug">“Sample review text sits here, in Averia, in the reviewer’s own words.”</p>
-        <div className="flex items-center gap-2.5">
-          <Avatar>
-            <AvatarFallback className="bg-sand text-ink">SR</AvatarFallback>
+      {/* Review: who first (avatar, name), then meadow star tiles that
+          catch the eye, then their words in plain Inter. */}
+      <article className="squircle flex flex-col gap-4 bg-white p-6 shadow-warm [--sq:28px]">
+        <div className="flex items-center gap-3.5">
+          <Avatar className="size-12">
+            <AvatarFallback className="bg-meadow-soft font-medium text-meadow-ink">MC</AvatarFallback>
           </Avatar>
-          <span className="text-graphite text-sm">Review card · sample</span>
+          <div className="flex min-w-0 flex-col gap-1">
+            <span className="font-semibold text-base text-ink leading-tight">Maya Chen</span>
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              <span className="flex gap-0.5" role="img" aria-label="5 out of 5 stars">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <span key={i} className="grid size-5 place-items-center rounded-[3px] bg-meadow">
+                    <StarIcon className="size-3.5 fill-white text-white" strokeWidth={0} />
+                  </span>
+                ))}
+              </span>
+              <span className="text-pebble text-sm">Parent · 2 weeks ago</span>
+            </div>
+          </div>
         </div>
+        <p className="text-[15px] text-graphite leading-relaxed">
+          “Applications used to take over our kitchen table. Now there is one plan, the deadlines are in it, and my
+          daughter actually knows what to do next. Her counsellor’s notes arrive before we think to ask.”
+        </p>
       </article>
 
-      <article className="flex flex-col gap-6 rounded-[28px] p-6 shadow-warm-lg md:p-8" style={{ backgroundImage: "var(--gradient-linen)" }}>
+      <article className="squircle flex flex-col gap-6 bg-white p-6 shadow-warm-lg [--sq:28px] md:p-8">
         <div className="flex items-center justify-between">
           <h3 className="font-heading font-light text-3xl text-ink tracking-[-0.04em]">Pro</h3>
-          <span className="rounded-full bg-success-soft px-2.5 py-0.5 font-medium text-success-foreground text-xs">Save 20%</span>
+          <Badge variant="success">Save 20%</Badge>
         </div>
-        <ul className="flex flex-col gap-3 border-[#EEE9E5] border-t pt-6 text-graphite text-sm">
+        <ul className="flex flex-col gap-3 border-border border-t pt-6 text-graphite text-sm">
           {["Unlimited essay feedback", "A counsellor on call", "Scholarship matching"].map((f) => (
             <li key={f} className="flex items-center gap-2.5">
-              <span className="flex size-5 items-center justify-center rounded-full bg-sand text-brick">
+              <span className="flex size-5 items-center justify-center rounded-full bg-mist text-dusk">
                 <CircleCheckIcon className="size-3.5" />
               </span>
               {f}
             </li>
           ))}
         </ul>
-        <Button variant="brand" className="h-11 sm:h-11">
+        <Button variant="brand" size="lg">
           Choose Pro
         </Button>
       </article>
 
-      <article className="relative flex min-h-56 flex-col justify-end overflow-hidden rounded-3xl p-6" style={{ backgroundImage: "var(--gradient-sage)" }}>
-        <div className="absolute top-6 right-6 left-10 rounded-2xl rounded-tl-md border border-[#dfe5d6] bg-white p-4 shadow-[0_3px_14px_rgba(80,63,84,0.06)]">
+      <article className="squircle relative flex min-h-56 flex-col justify-end overflow-hidden bg-meadow-soft p-6 [--sq:var(--radius-3xl)]">
+        <div className="squircle absolute top-6 right-6 left-10 bg-white p-4 shadow-warm-xs [--sq:var(--radius-2xl)]">
           <p className="font-medium text-ink text-sm">Feedback on paragraph 2</p>
           <p className="mt-1 text-graphite text-xs">Show the robotics club, don’t tell it.</p>
         </div>

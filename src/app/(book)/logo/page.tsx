@@ -1,3 +1,6 @@
+import { statSync } from "node:fs";
+import { join } from "node:path";
+import { DownloadIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { AppIcon, Mark, Wordmark } from "@/components/brand/logo";
@@ -5,16 +8,23 @@ import { DoDont, PageHeader, Section, Specimen } from "@/components/book/section
 
 export const metadata: Metadata = { title: "Logo" };
 
+/** [file, label, preview background, preview image size] */
 const FILES = [
-  ["wordmark-ink.svg", "Wordmark, ink"],
-  ["wordmark-paper.svg", "Wordmark, paper"],
-  ["mark-ink.svg", "Icon, ink"],
-  ["mark-paper.svg", "Icon, paper"],
-  ["app-icon-ink.svg", "App icon, ink"],
-  ["app-icon-paper.svg", "App icon, paper"],
-  ["app-icon-meadow.svg", "App icon, meadow"],
-  ["favicon.svg", "Favicon"],
+  ["wordmark-ink.svg", "Wordmark, ink", "bg-paper", "w-40"],
+  ["wordmark-paper.svg", "Wordmark, paper", "bg-ink", "w-40"],
+  ["mark-ink.svg", "Icon, ink", "bg-paper", "w-24"],
+  ["mark-paper.svg", "Icon, paper", "bg-ink", "w-24"],
+  ["app-icon-ink.svg", "App icon, ink", "bg-paper", "size-24 drop-shadow-md"],
+  ["app-icon-paper.svg", "App icon, paper", "bg-mist", "size-24 drop-shadow-md"],
+  ["app-icon-meadow.svg", "App icon, meadow", "bg-paper", "size-24 drop-shadow-md"],
+  ["favicon.svg", "Favicon", "bg-paper", "size-16 drop-shadow-md"],
 ] as const;
+
+/** Read at build time, so the size on the card is the size you get. */
+function fileSize(file: string) {
+  const bytes = statSync(join(process.cwd(), "public/logo", file)).size;
+  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+}
 
 export default function LogoPage() {
   return (
@@ -39,14 +49,14 @@ export default function LogoPage() {
             <Wordmark className="w-[min(100%,300px)] text-paper" />
           </Specimen>
           <figure className="flex min-w-0 flex-col gap-3">
-            <div className="relative flex min-h-60 items-end overflow-hidden rounded-2xl shadow-warm">
-              <Image src="/scenes/main_bg-2.webp" alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-bottom" />
-              <div className="absolute inset-0" style={{ backgroundImage: "var(--gradient-ink-veil)" }} />
-              <Wordmark className="relative m-7 w-40 text-paper drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]" />
+            <div className="squircle relative flex min-h-60 items-end overflow-hidden p-8 shadow-warm">
+              <Image src="/scenes/university-scene.webp" alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+              <div className="absolute inset-0" style={{ backgroundImage: "var(--scrim-ink)" }} />
+              <Wordmark className="relative w-28 text-paper" />
             </div>
             <figcaption className="flex flex-col gap-0.5 px-1">
               <span className="font-medium text-ink text-sm">Paper on imagery</span>
-              <span className="text-pebble text-xs">Always over the ink veil, never straight on the art.</span>
+              <span className="text-pebble text-xs">Small, in a corner, over the ink scrim. Never straight on the art.</span>
             </figcaption>
           </figure>
         </div>
@@ -69,14 +79,14 @@ export default function LogoPage() {
             <Mark className="w-32 text-paper" />
           </Specimen>
           <Specimen label="On dusk" tone="dusk" className="min-h-80">
-            <Mark className="w-32 text-linen" />
+            <Mark className="w-32 text-mist" />
           </Specimen>
         </div>
       </Section>
 
       <Section
         title="App icon and favicon"
-        description="The icon on a tile. Ink is the default; paper suits light home screens; meadow and brick are for seasonal or campaign moments. The favicon is the ink tile."
+        description="The icon on a tile. Ink is the default; paper suits light home screens; meadow is for campaign moments. The favicon is the meadow tile, so Unive is easy to spot in a row of tabs."
       >
         <div className="grid gap-4 md:grid-cols-[3fr_2fr]">
           <Specimen label="Tiles" note="iOS mask shown. Export at 1024 px; the platform rounds the corners." tone="white" className="gap-6">
@@ -84,14 +94,13 @@ export default function LogoPage() {
               <AppIcon className="size-24 drop-shadow-md" />
               <AppIcon tone="paper" className="size-24 drop-shadow-md" />
               <AppIcon tone="meadow" className="size-24 drop-shadow-md" />
-              <AppIcon tone="brick" className="size-24 drop-shadow-md" />
             </div>
           </Specimen>
           <Specimen label="Favicon at real size" note="16, 24, 32 and 48 px. The squiggle fills in at 16 px and still reads “un”." tone="white">
             <div className="flex items-end gap-5">
               {[16, 24, 32, 48].map((s) => (
                 <div key={s} className="flex flex-col items-center gap-2">
-                  <AppIcon rounded="favicon" className="shrink-0" title={`Favicon at ${s} px`} style={{ width: s, height: s }} />
+                  <AppIcon rounded="favicon" tone="meadow" className="shrink-0" title={`Favicon at ${s} px`} style={{ width: s, height: s }} />
                   <span className="text-pebble text-[10px] tabular-nums">{s}</span>
                 </div>
               ))}
@@ -106,12 +115,12 @@ export default function LogoPage() {
       >
         <div className="grid gap-4 md:grid-cols-2">
           <Specimen label="Wordmark clear space" note="x = the height of the u." tone="white" className="min-h-72">
-            <div className="relative p-[38px] outline-1 outline-sky/60 outline-dashed">
-              <div className="outline-1 outline-sky/40 outline-dashed">
+            <div className="relative p-[38px] outline-1 outline-meadow/60 outline-dashed">
+              <div className="outline-1 outline-meadow/40 outline-dashed">
                 <Wordmark className="w-56 text-ink" />
               </div>
-              <span className="absolute top-1 left-1/2 -translate-x-1/2 font-mono text-[10px] text-sky">x</span>
-              <span className="absolute top-1/2 left-1.5 -translate-y-1/2 font-mono text-[10px] text-sky">x</span>
+              <span className="absolute top-1 left-1/2 -translate-x-1/2 font-mono text-[10px] text-meadow">x</span>
+              <span className="absolute top-1/2 left-1.5 -translate-y-1/2 font-mono text-[10px] text-meadow">x</span>
             </div>
           </Specimen>
           <Specimen label="Minimum sizes" tone="white" className="min-h-72">
@@ -134,8 +143,9 @@ export default function LogoPage() {
           <DoDont kind="do" label="Ink on paper, or paper on a brand colour.">
             <Wordmark className="w-36 text-ink" />
           </DoDont>
-          <DoDont kind="do" label="Paper over the ink veil on imagery.">
-            <div className="absolute inset-0 bg-dusk" style={{ backgroundImage: "var(--gradient-ink-veil), var(--gradient-meadow-dusk)" }} />
+          <DoDont kind="do" label="Paper on imagery, over the ink scrim.">
+            <Image src="/scenes/desktop-scene.webp" alt="" fill sizes="25vw" className="object-cover" />
+            <div className="absolute inset-0" style={{ backgroundImage: "var(--scrim-ink)" }} />
             <Wordmark className="relative w-36 text-paper" />
           </DoDont>
           <DoDont kind="dont" label="Add a dot to the icon. It is “un”, alone.">
@@ -150,8 +160,8 @@ export default function LogoPage() {
           <DoDont kind="dont" label="Outline it. It is solid ink.">
             <Wordmark title="" className="w-36 fill-transparent stroke-[10] stroke-ink" />
           </DoDont>
-          <DoDont kind="dont" label="Use sky blue or gradients on it.">
-            <Wordmark title="" className="w-36 text-sky" />
+          <DoDont kind="dont" label="Recolour it. The logo is ink or paper only.">
+            <Wordmark title="" className="w-36 text-meadow" />
           </DoDont>
           <DoDont kind="dont" label="Retype it in Averia or any font.">
             <span className="font-heading font-bold text-5xl text-ink tracking-[-0.05em]">unive</span>
@@ -165,22 +175,42 @@ export default function LogoPage() {
         </div>
       </Section>
 
-      <Section title="Files" description={<>Generated from the master drawings by <code>generator/logo.py</code>. Edit the script, never the SVGs.</>}>
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {FILES.map(([file, label]) => (
+      <Section
+        title="Files"
+        description={
+          <>
+            Click any file to download the SVG. Generated from the master drawings by <code>generator/logo.py</code>. Edit
+            the script, never the SVGs.
+          </>
+        }
+      >
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {FILES.map(([file, label, bg, size]) => (
             <li key={file}>
               <a
                 href={`/logo/${file}`}
                 download
-                className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-warm transition-shadow hover:shadow-warm-lg"
+                aria-label={`Download ${label} (${file})`}
+                className="group flex flex-col gap-2 rounded-3xl bg-white p-2 shadow-warm outline-none transition-shadow hover:shadow-warm-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <span className={`flex size-12 shrink-0 items-center justify-center rounded-xl ${file.includes("-paper.svg") && !file.startsWith("app") ? "bg-ink" : "bg-paper"}`}>
-                  {/* biome-ignore lint/performance/noImgElement: tiny static SVG preview */}
-                  <img src={`/logo/${file}`} alt="" className="max-h-8 max-w-9" />
+                <span className={`squircle flex aspect-[4/3] items-center justify-center [--sq:var(--radius-2xl)] ${bg}`}>
+                  {/* biome-ignore lint/performance/noImgElement: static SVG preview */}
+                  <img
+                    src={`/logo/${file}`}
+                    alt=""
+                    className={`${size} transition-transform duration-300 ease-out group-hover:scale-[1.04]`}
+                  />
                 </span>
-                <span className="flex min-w-0 flex-col">
-                  <span className="font-medium text-ink text-sm">{label}</span>
-                  <span className="truncate text-pebble text-xs">{file}</span>
+                <span className="flex items-center gap-3 py-1.5 pr-1.5 pl-3">
+                  <span className="flex min-w-0 flex-1 flex-col">
+                    <span className="font-medium text-ink text-sm">{label}</span>
+                    <span className="truncate text-pebble text-xs">
+                      {file} · {fileSize(file)}
+                    </span>
+                  </span>
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-mist text-ink transition-colors group-hover:bg-ink group-hover:text-paper">
+                    <DownloadIcon className="size-4" aria-hidden />
+                  </span>
                 </span>
               </a>
             </li>

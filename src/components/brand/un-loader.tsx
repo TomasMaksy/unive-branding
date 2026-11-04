@@ -2,7 +2,7 @@
 
 import { cn } from "cn";
 import type React from "react";
-import { flowPath, UN_VIEWBOX, writePath } from "@/lib/un-wave";
+import { DISC_STEP, flowPath, UN_VIEWBOX, writePath } from "@/lib/un-wave";
 import { useLoop } from "./use-loop";
 
 export type UnLoaderProps = {
@@ -32,17 +32,20 @@ export function UnLoader({
   const ms = duration ?? (variant === "flow" ? 2400 : 2800);
   const phase = useLoop(ms, { paused, still: variant === "write" ? 0.5 : 0 });
   const B = UN_VIEWBOX;
+  // Fewer discs when small; the edge stays smooth at any size.
+  const step = DISC_STEP(size / B.height);
   let body: React.ReactNode;
   if (variant === "flow") {
-    const f = flowPath(phase);
+    const f = flowPath(phase, undefined, step);
     body = <path transform={`translate(${f.dx.toFixed(2)} ${f.dy.toFixed(2)})`} d={f.d} />;
   } else {
-    body = <path d={writePath(phase)} />;
+    body = <path d={writePath(phase, { step })} />;
   }
   return (
     <svg
-      role="status"
-      aria-label={label}
+      role={label ? "status" : undefined}
+      aria-label={label || undefined}
+      aria-hidden={label ? undefined : true}
       viewBox={`${B.x} ${B.y} ${B.width} ${B.height}`}
       height={size}
       width={(size * B.width) / B.height}

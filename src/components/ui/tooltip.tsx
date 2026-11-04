@@ -46,14 +46,15 @@ export function TooltipPopup({
       >
         <TooltipPrimitive.Popup
           className={cn(
-            "relative flex h-(--popup-height,auto) w-(--popup-width,auto) origin-(--transform-origin) rounded-lg border border-neutral-700 bg-neutral-800 not-dark:bg-clip-padding text-neutral-200 text-xs shadow-md/5 transition-[opacity,scale] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-md)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] data-ending-style:scale-98 data-starting-style:scale-98 data-ending-style:opacity-0 data-starting-style:opacity-0 data-instant:duration-0 dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+            // iOS material: frosted paper, a half-pixel hairline, a soft warm shadow.
+            "relative flex h-(--popup-height,auto) w-(--popup-width,auto) origin-(--transform-origin) rounded-[10px] bg-white/80 font-medium text-[13px] text-ink shadow-warm-lg ring-[0.5px] ring-(--hairline) backdrop-blur-xl backdrop-saturate-150 transition-[opacity,scale] duration-150 data-ending-style:scale-95 data-starting-style:scale-95 data-ending-style:opacity-0 data-starting-style:opacity-0 data-instant:duration-0",
             className,
           )}
           data-slot="tooltip-popup"
           {...props}
         >
           <TooltipPrimitive.Viewport
-            className="relative size-full overflow-clip px-2 py-1 data-instant:transition-none"
+            className="relative size-full overflow-clip px-2.5 py-1.5 data-instant:transition-none"
             data-slot="tooltip-viewport"
           >
             {children}

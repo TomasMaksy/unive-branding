@@ -96,7 +96,7 @@ export default function TypePage() {
             </p>
             <p className="font-medium text-ink text-sm">Due Friday · 640 of 650 words</p>
           </article>
-          <blockquote className="flex flex-col justify-between gap-8 rounded-[28px] bg-sand p-8">
+          <blockquote className="flex flex-col justify-between gap-8 rounded-[28px] bg-mist p-8">
             <p className="font-heading font-light text-3xl text-ink italic leading-snug tracking-[-0.03em]">
               “It felt like someone who knew the way was walking next to us.”
             </p>

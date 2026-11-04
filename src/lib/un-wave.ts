@@ -12,21 +12,22 @@
  *   ribbon a long, thin wave for progress, written left to right
  *
  * Everything here is a pure function of a phase or progress value, so the
- * same code drives requestAnimationFrame, Remotion frames and SVG export.
+ * same code drives requestAnimationFrame and the SVG exports.
  */
 import geometry from "./un-geometry.json";
 
-type Sample = { x: number; y: number; r: number };
+export type Sample = { x: number; y: number; r: number };
 
-const PERIOD = geometry.period as [number, number, number][];
-const FULL = geometry.full as [number, number, number][];
-const SHIFT = geometry.shift as [number, number];
-const TAIL = geometry.tail;
-const HEAD = geometry.head;
+export const PERIOD = geometry.period as [number, number, number][];
+export const FULL = geometry.full as [number, number, number][];
+export const SHIFT = geometry.shift as [number, number];
+/** Icon length before the period's seam, and after it. */
+export const TAIL = geometry.tail;
+export const HEAD = geometry.head;
 /** The flow trims the stroke ends a little, where the endless wave would start to hook into the next letter. */
-const TRIM = 0.72;
+export const TRIM = 0.72;
 
-function arcLengths(points: [number, number, number][]): number[] {
+export function arcLengths(points: [number, number, number][]): number[] {
   const s = [0];
   for (let i = 1; i < points.length; i++) {
     s.push(s[i - 1] + Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]));
@@ -41,7 +42,7 @@ export const PERIOD_LENGTH = PERIOD_S[PERIOD_S.length - 1];
 /** Arc length of the whole icon. */
 export const ICON_LENGTH = FULL_S[FULL_S.length - 1];
 
-function lookup(points: [number, number, number][], s: number[], at: number): Sample {
+export function lookup(points: [number, number, number][], s: number[], at: number): Sample {
   let lo = 0;
   let hi = s.length - 1;
   while (hi - lo > 1) {
@@ -56,18 +57,51 @@ function lookup(points: [number, number, number][], s: number[], at: number): Sa
 }
 
 /** A point on the endless wave. s = 0 is where stem 1 is cut. */
-function onWave(s: number): Sample {
+export function onWave(s: number): Sample {
   const k = Math.floor(s / PERIOD_LENGTH);
   const p = lookup(PERIOD, PERIOD_S, s - k * PERIOD_LENGTH);
   return { x: p.x + k * SHIFT[0], y: p.y + k * SHIFT[1], r: p.r };
 }
 
 /** A point on the icon itself (with its real free ends). */
-function onIcon(s: number): Sample {
+export function onIcon(s: number): Sample {
   return lookup(FULL, FULL_S, Math.min(Math.max(s, 0), ICON_LENGTH));
 }
 
 const fmt = (v: number) => (Math.round(v * 10) / 10).toString();
+
+/**
+ * A variable-width stroke drawn as overlapping discs along `at(s)`, one
+ * path. With the nonzero fill rule the discs merge into one clean shape:
+ * no folds on tight bends and no seams, at any size. `step` is the spacing
+ * in artwork px; the edge ripples by about step² / 8r, so keep it near
+ * DISC_STEP(px per artwork px) for the size you draw at.
+ */
+export function strokeDiscs(
+  at: (s: number) => Sample,
+  from: number,
+  to: number,
+  opts: { step?: number; width?: number; count?: number } = {},
+): string {
+  const len = to - from;
+  if (len < 0) return "";
+  const step = opts.step ?? 6;
+  const w = opts.width ?? 1;
+  // A fixed `count` gives every frame the same commands (for SMIL export):
+  // each disc then glides along the stroke from frame to frame.
+  const n = opts.count ?? Math.max(1, Math.ceil(len / step));
+  let d = "";
+  for (let i = 0; i <= n; i++) {
+    const p = at(from + (len * i) / n);
+    const r = p.r * w;
+    if (r <= 0) continue;
+    d += `M${fmt(p.x - r)} ${fmt(p.y)}a${fmt(r)} ${fmt(r)} 0 1 0 ${fmt(2 * r)} 0a${fmt(r)} ${fmt(r)} 0 1 0 ${fmt(-2 * r)} 0`;
+  }
+  return d;
+}
+
+/** Disc spacing that keeps the edge within ~0.15 screen px at `scale` px per artwork px. */
+export const DISC_STEP = (scale: number) => Math.min(28, Math.max(3, Math.sqrt((8 * 40 * 0.15) / scale)));
 
 /**
  * Outline of a variable-width stroke along `at(s)` for s in [from, to], with
@@ -154,11 +188,19 @@ export const UN_VIEWBOX = { x: 110, y: 340, width: 1040, height: 700 } as const;
  * Flow: phase 0..1 is one full loop. The icon slides one period along its
  * own path while the camera follows, so frame 0 and frame 1 are identical.
  */
-export function flowPath(phase: number, count?: number): { d: string; dx: number; dy: number } {
+export function flowPath(
+  phase: number,
+  count?: number,
+  step?: number,
+): { d: string; dx: number; dy: number } {
   const p = ((phase % 1) + 1) % 1;
   const s = p * PERIOD_LENGTH;
+  const from = s - TAIL * TRIM;
+  const to = s + PERIOD_LENGTH + HEAD * TRIM;
   return {
-    d: strokeOutline(onWave, s - TAIL * TRIM, s + PERIOD_LENGTH + HEAD * TRIM, { count }),
+    // A fixed `count` is for SMIL export (same commands every frame); live
+    // drawing uses discs, which stay clean at any size.
+    d: count ? strokeOutline(onWave, from, to, { count }) : strokeDiscs(onWave, from, to, { step }),
     dx: -p * SHIFT[0],
     dy: -p * SHIFT[1],
   };
@@ -170,45 +212,52 @@ export function flowPath(phase: number, count?: number): { d: string; dx: number
  */
 export function writePath(
   phase: number,
-  opts: { ease?: (t: number) => number; count?: number } = {},
+  opts: { ease?: (t: number) => number; count?: number; step?: number } = {},
 ): string {
   const ease = opts.ease ?? easeInOut;
   const p = ((phase % 1) + 1) % 1;
   const head = ease(Math.min(1, p / 0.5)) * ICON_LENGTH;
   const tail = ease(Math.max(0, (p - 0.5) / 0.5)) * ICON_LENGTH;
-  return strokeOutline(onIcon, tail, head, { count: opts.count });
+  if (opts.count) return strokeOutline(onIcon, tail, head, { count: opts.count });
+  return head - tail < 0.5 ? "" : strokeDiscs(onIcon, tail, head, { step: opts.step });
 }
 
 /** Part of the icon drawn from its centreline: 0..1 of its length. */
-export function iconPath(from = 0, to = 1, count?: number): string {
-  return strokeOutline(onIcon, from * ICON_LENGTH, to * ICON_LENGTH, { count });
+export function iconPath(from = 0, to = 1, step?: number): string {
+  return strokeDiscs(onIcon, from * ICON_LENGTH, to * ICON_LENGTH, { step });
 }
 
 /**
- * Ribbon: a thin endless wave for progress bars. `periods` across, with the
- * wave flowing at `phase`; `value` 0..1 is how much of it is written.
- * Returns the path in its own box: width = periods * shift, height = waveBox.
+ * Ribbon: an endless "ununun" wave for progress bars, at the logo's own
+ * stroke weight (so it reads as the mark, not a thin squiggle). `periods`
+ * across, flowing at `phase`; `value` 0..1 is how much of it is written.
+ * Returns the path in RIBBON_BOX(periods).
  */
-export function ribbonPath(value: number, phase: number, periods = 4, width = 0.36): string {
+export function ribbonPath(value: number, phase: number, periods = 6, width = 1, step = 14): string {
   const s0 = (((phase % 1) + 1) % 1) * PERIOD_LENGTH;
   const total = periods * PERIOD_LENGTH;
   const v = Math.min(1, Math.max(0, value));
-  return strokeOutline(
+  if (v <= 0) return "";
+  return strokeDiscs(
     (s) => {
       const p = onWave(s);
       return { x: p.x - (s0 / PERIOD_LENGTH) * SHIFT[0], y: p.y, r: p.r };
     },
     s0,
     s0 + total * v,
-    { width, step: 10 },
+    { width, step },
   );
 }
 
-export const RIBBON_BOX = (periods = 4) => ({
-  x: PERIOD[0][0] - 40,
-  y: 420,
-  width: periods * SHIFT[0] + 80,
-  height: 540,
+const WAVE_TOP = Math.min(...PERIOD.map((p) => p[1] - p[2]));
+const WAVE_BOTTOM = Math.max(...PERIOD.map((p) => p[1] + p[2]));
+const WAVE_R = Math.max(...PERIOD.map((p) => p[2]));
+
+export const RIBBON_BOX = (periods = 6) => ({
+  x: PERIOD[0][0] - WAVE_R - 8,
+  y: WAVE_TOP - 8,
+  width: periods * SHIFT[0] + 2 * WAVE_R + 16,
+  height: WAVE_BOTTOM - WAVE_TOP + 16,
 });
 
 export function easeInOut(t: number): number {

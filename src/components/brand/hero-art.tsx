@@ -3,7 +3,7 @@ import Image from "next/image";
 
 /**
  * The landing hero's panorama: campus scene over a horizon that rises on
- * load, fading out at the sides into the meadow-dusk gradient. This is the
+ * load, fading out at the sides into its own sky and ground. This is the
  * brand's signature image; reuse it, don't reinvent it.
  */
 export function HeroArt({ className, priority = false }: { className?: string; priority?: boolean }) {
@@ -11,7 +11,7 @@ export function HeroArt({ className, priority = false }: { className?: string; p
     <div
       aria-hidden
       className={cn("pointer-events-none relative w-full overflow-hidden", className)}
-      style={{ backgroundImage: "var(--gradient-meadow-dusk)" }}
+      style={{ backgroundImage: "var(--scene-backdrop)" }}
     >
       <div className="absolute inset-0 z-10 flex justify-center">
         <Image
@@ -66,7 +66,7 @@ const logoClass = "h-full w-auto object-contain opacity-90 drop-shadow-[0_1px_2p
 export function PressBand() {
   return (
     <div className="relative h-52 sm:h-56 md:h-64">
-      <div aria-hidden className="absolute inset-0" style={{ backgroundImage: "var(--gradient-ink-veil)" }} />
+      <div aria-hidden className="absolute inset-0" style={{ backgroundImage: "var(--scrim-ink)" }} />
       <div className="absolute inset-x-0 bottom-8 z-20 flex flex-col items-center gap-2 px-5 md:inset-x-auto md:bottom-10 md:left-12 md:items-start md:gap-2.5 md:px-0 lg:bottom-12 lg:left-16">
         <p className="eyebrow enter-label text-white/85 drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]" data-enter="">
           Featured in

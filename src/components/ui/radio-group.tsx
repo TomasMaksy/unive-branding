@@ -25,14 +25,20 @@ export function Radio({
   return (
     <RadioPrimitive.Root
       className={cn(
-        "relative inline-flex size-4.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-input bg-background not-dark:bg-clip-padding shadow-xs/5 outline-none transition-shadow before:pointer-events-none before:absolute before:inset-0 before:rounded-full not-data-disabled:not-data-checked:not-aria-invalid:before:shadow-[0_1px_--theme(--color-black/4%)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background aria-invalid:border-destructive/36 focus-visible:aria-invalid:border-destructive/64 focus-visible:aria-invalid:ring-destructive/48 data-disabled:cursor-not-allowed data-disabled:opacity-64 sm:size-4 dark:not-data-checked:bg-input/32 dark:aria-invalid:ring-destructive/24 dark:not-data-disabled:not-data-checked:not-aria-invalid:before:shadow-[0_-1px_--theme(--color-white/6%)] [[data-disabled],[data-checked],[aria-invalid]]:shadow-none",
+        // iOS-style: a white circle with a hairline that fills meadow, the
+        // white centre popping in with a little spring.
+        "relative inline-flex size-5.5 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white shadow-[inset_0_0_0_1.5px_var(--hairline-strong)] outline-none [transition:scale_320ms_cubic-bezier(.3,1.4,.5,1),background-color_180ms_ease-out,box-shadow_180ms_ease-out]",
+        "hover:shadow-[inset_0_0_0_1.5px_var(--pebble)] active:not-data-disabled:scale-[0.86] active:not-data-disabled:duration-100 data-checked:bg-meadow data-checked:shadow-none",
+        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "aria-invalid:shadow-[inset_0_0_0_1.5px_var(--danger)] data-disabled:cursor-not-allowed data-disabled:opacity-48",
         className,
       )}
       data-slot="radio"
       {...props}
     >
       <RadioPrimitive.Indicator
-        className="absolute -inset-px flex size-4.5 items-center justify-center rounded-full before:size-2 before:rounded-full before:bg-primary-foreground data-unchecked:hidden data-checked:bg-primary sm:size-4 sm:before:size-1.5"
+        keepMounted
+        className="pointer-events-none size-2 scale-0 rounded-full bg-white [transition:scale_380ms_cubic-bezier(.3,1.5,.5,1)] data-checked:scale-100 data-unchecked:duration-150"
         data-slot="radio-indicator"
       />
     </RadioPrimitive.Root>

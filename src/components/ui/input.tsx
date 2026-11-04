@@ -2,8 +2,8 @@
 
 import { Input as InputPrimitive } from "@base-ui/react/input";
 import { cn } from "cn";
+import { SearchIcon } from "lucide-react";
 import type * as React from "react";
-import { fieldControlInputLeadingClass } from "@/components/ui/field-control-height";
 
 export type InputProps = Omit<
   InputPrimitive.Props & React.RefAttributes<HTMLInputElement>,
@@ -25,17 +25,16 @@ export function Input({
   ...props
 }: InputProps): React.ReactElement {
   const inputClassName = cn(
-    "h-10 w-full min-w-0 rounded-[inherit] px-[calc(--spacing(3)-1px)] outline-none [transition:background-color_5000000s_ease-in-out_0s] placeholder:text-muted-foreground/72 sm:h-9",
-    fieldControlInputLeadingClass,
+    "h-10 w-full min-w-0 rounded-[inherit] px-4 leading-10 outline-none [transition:background-color_5000000s_ease-in-out_0s] placeholder:text-pebble",
     size === "xs" &&
-      "h-8.5 px-[calc(--spacing(2)-1px)] leading-8.5 sm:h-7.5 sm:leading-7.5",
+      "h-8 px-3 text-sm leading-8",
     size === "sm" &&
-      "h-9 px-[calc(--spacing(2.5)-1px)] leading-9 sm:h-8 sm:leading-8",
-    size === "lg" && "h-11 leading-11 sm:h-10 sm:leading-10",
+      "h-9 px-3.5 leading-9",
+    size === "lg" && "h-12 px-5 text-base leading-12",
     props.type === "search" &&
-      "[&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-results-button]:appearance-none [&::-webkit-search-results-decoration]:appearance-none",
+      "pl-10 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-results-button]:appearance-none [&::-webkit-search-results-decoration]:appearance-none",
     props.type === "file" &&
-      "text-muted-foreground file:me-3 file:bg-transparent file:font-medium file:text-foreground file:text-sm",
+      "text-graphite file:me-3 file:bg-transparent file:font-medium file:text-ink file:text-sm",
     inputClassNameProp,
   );
 
@@ -44,13 +43,19 @@ export function Input({
       className={
         cn(
           !unstyled &&
-            "relative inline-flex w-full rounded-lg border border-input bg-background not-dark:bg-clip-padding text-base text-foreground shadow-xs/5 ring-ring/24 transition-shadow before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] not-has-disabled:not-has-focus-visible:not-has-aria-invalid:before:shadow-[0_1px_--theme(--color-black/4%)] has-focus-visible:has-aria-invalid:border-destructive/64 has-focus-visible:has-aria-invalid:ring-destructive/16 has-aria-invalid:border-destructive/36 has-focus-visible:border-ring has-autofill:bg-foreground/4 has-disabled:opacity-64 has-[:disabled,:focus-visible,[aria-invalid]]:shadow-none has-focus-visible:ring-[3px] sm:text-sm dark:bg-input/32 dark:has-autofill:bg-foreground/8 dark:has-aria-invalid:ring-destructive/24 dark:not-has-disabled:not-has-focus-visible:not-has-aria-invalid:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+            // iOS field: a filled warm grey with no border, white with a
+            // meadow ring while focused. Every one-line field is a capsule;
+            // only the multi-line textarea is a squircle.
+            cn("inline-flex", "relative w-full bg-mist text-[15px] text-foreground transition-[background-color,box-shadow] duration-200 hover:bg-mist-hover has-focus-visible:bg-white has-focus-visible:shadow-[0_0_0_1.5px_var(--meadow),0_0_0_5px_color-mix(in_oklab,var(--meadow)_16%,transparent)] has-aria-invalid:bg-danger-soft has-aria-invalid:shadow-[0_0_0_1.5px_var(--danger)] has-focus-visible:has-aria-invalid:bg-white has-focus-visible:has-aria-invalid:shadow-[0_0_0_1.5px_var(--danger),0_0_0_5px_color-mix(in_oklab,var(--danger)_16%,transparent)] has-disabled:opacity-48", "rounded-full"),
           className,
         ) || undefined
       }
       data-size={size}
       data-slot="input-control"
     >
+      {props.type === "search" && !unstyled ? (
+        <SearchIcon aria-hidden className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-pebble" />
+      ) : null}
       {nativeInput ? (
         <input
           className={inputClassName}

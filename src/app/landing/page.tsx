@@ -27,7 +27,7 @@ export default function LandingPreview() {
       <header className="fixed inset-x-0 top-0 z-[110] h-16 bg-paper/95 md:h-20">
         <div className="mx-auto flex h-16 max-w-7xl items-center px-6 md:h-20 md:px-10">
           <a href="#top" aria-label="Unive home" className="text-ink">
-            <Wordmark title="" className="w-[74px] md:w-[86px]" />
+            <Wordmark title="" className="w-16 md:w-[68px]" />
           </a>
           <div className="ml-auto flex items-center gap-4">
             <a href="#top" className="text-graphite text-sm hover:text-ink">
@@ -78,7 +78,7 @@ export default function LandingPreview() {
         <div className="flex flex-col gap-4 rounded-[28px] bg-white p-8 shadow-warm">
           <p className="eyebrow text-pebble">Browser tab</p>
           <div className="flex items-center gap-2 rounded-t-xl border border-border border-b-0 bg-paper px-3 py-2">
-            <AppIcon rounded="favicon" className="size-4" title="" />
+            <AppIcon rounded="favicon" tone="meadow" className="size-4" title="" />
             <span className="truncate text-ink text-xs">Unive · College admissions</span>
           </div>
         </div>
@@ -98,7 +98,7 @@ export default function LandingPreview() {
         </div>
       </section>
 
-      <footer className="bg-dusk text-paper">
+      <footer className="bg-ink text-paper">
         <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-16 md:flex-row md:items-end md:justify-between md:px-10">
           <Wordmark className="w-44 text-paper" />
           <div className="flex items-center gap-3 text-paper/60 text-sm">

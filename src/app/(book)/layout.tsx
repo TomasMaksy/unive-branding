@@ -1,52 +1,60 @@
 import Link from "next/link";
 import { Mark, Wordmark } from "@/components/brand/logo";
-import { BookNav } from "@/components/book/nav";
-import { PAGES } from "@/components/book/pages";
+import { GROUPS } from "@/components/book/pages";
+
+/** Things to take away, beside the book's own sections. */
+const FILES = [
+  { href: "/landing", label: "Landing preview" },
+  { href: "/logo/wordmark-ink.svg", label: "Wordmark SVG" },
+  { href: "/logo/app-icon-ink.svg", label: "App icon SVG" },
+  { href: "/loaders/un-flow.svg", label: "Loader SVG" },
+];
+import { Sidebar } from "@/components/book/sidebar";
 
 export default function BookLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-dvh flex-col">
-      <header className="sticky top-0 z-50 border-border/70 border-b bg-paper/90 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 md:gap-8 md:px-10">
-          <Link href="/" className="shrink-0 text-ink" aria-label="Unive brand book, home">
-            <Wordmark title="" className="w-[78px]" />
-          </Link>
-          <BookNav />
-          <Link
-            href="/landing"
-            className="ml-auto hidden shrink-0 rounded-lg px-2.5 py-1.5 text-graphite text-sm hover:bg-paper-hover hover:text-ink md:block"
-          >
-            Landing preview ↗
-          </Link>
-        </div>
-      </header>
-      <main className="flex-1">{children}</main>
-      <footer className="mt-24 bg-dusk text-paper">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-[1fr_auto] md:px-10">
-          <div className="flex flex-col gap-5">
-            <Wordmark title="Unive" className="w-40 text-paper" />
-            <p className="max-w-sm text-paper/70 text-sm leading-relaxed">
-              One source for the Unive brand. Tokens live in <code className="text-paper">globals.css</code>, the logo in{" "}
-              <code className="text-paper">public/logo</code>, components in <code className="text-paper">components/ui</code>.
-            </p>
-          </div>
-          <ul className="grid grid-cols-2 gap-x-10 gap-y-2 text-sm">
-            {PAGES.map((p) => (
-              <li key={p.href}>
-                <Link href={p.href} className="text-paper/70 hover:text-paper">
-                  {p.label}
-                </Link>
-              </li>
+    <div className="min-h-dvh">
+      <Sidebar />
+      <div className="flex min-h-dvh flex-col transition-[padding] duration-300 ease-unive lg:pl-64 collapsed:pl-18">
+        <main className="flex-1">{children}</main>
+        {/* Ink, the brand's dark: the wordmark and a note, then the book's
+            sections as columns, then a quiet bottom line. */}
+        <footer className="mt-24 bg-ink text-paper">
+          <div className="mx-auto grid max-w-7xl gap-12 px-4 pt-16 pb-12 md:grid-cols-[minmax(0,1.4fr)_repeat(4,minmax(0,1fr))] md:px-10">
+            <div className="flex flex-col gap-5">
+              <Wordmark title="Unive" className="w-32 text-paper" />
+              <p className="max-w-xs text-pretty text-paper/65 text-sm leading-relaxed">
+                One source for the Unive brand: tokens, logo, type and components.
+              </p>
+            </div>
+            {[...GROUPS, { label: "Files", pages: FILES }].map((g) => (
+              <nav key={g.label} aria-label={g.label} className="flex flex-col gap-4">
+                <p className="eyebrow text-paper/45">{g.label}</p>
+                <ul className="flex flex-col gap-2.5 text-sm">
+                  {g.pages.map((p) => (
+                    <li key={p.href}>
+                      <Link href={p.href} className="text-paper/85 transition-colors hover:text-white">
+                        {p.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             ))}
-            <li>
-              <Link href="/landing" className="text-paper/70 hover:text-paper">
-                Landing preview
-              </Link>
-            </li>
-          </ul>
-          <Mark title="" className="w-10 text-paper/40" />
-        </div>
-      </footer>
+          </div>
+          <div className="mx-auto max-w-7xl px-4 md:px-10">
+            <div className="flex flex-col gap-3 border-white/10 border-t py-6 text-paper/45 text-xs sm:flex-row sm:items-center sm:justify-between">
+              <span className="flex items-center gap-2.5">
+                <Mark title="" className="w-5 text-paper/45" />© Unive 2026
+              </span>
+              <span>
+                Tokens in <code className="text-paper/85">globals.css</code> · components in{" "}
+                <code className="text-paper/85">components/ui</code>
+              </span>
+            </div>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }
