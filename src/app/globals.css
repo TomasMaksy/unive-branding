@@ -1,0 +1,285 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ==========================================================================
+   Unive brand tokens. The single source of truth for colour, type, radius,
+   shadow and gradient. Web and mobile read these values; nothing else
+   should hard-code a hex.
+   ========================================================================== */
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-averia-serif), ui-serif, Georgia, serif;
+}
+
+:root {
+  /* ---- Core: paper and ink ------------------------------------------- */
+  --paper: #f9f9f7; /* page, the hero sky */
+  --paper-hover: #ececea;
+  --ink: #1d1b18; /* warm black: logo, headings, primary buttons */
+  --ink-soft: #3a3631;
+  --graphite: #57524b; /* body copy on paper */
+  --pebble: #77716a; /* muted, captions */
+
+  /* ---- Earth: taken from the hero art --------------------------------- */
+  --linen: #e8e2d6; /* the hero's horizon haze */
+  --sand: #ede4dc; /* warm fill, selected rows */
+  --sand-hover: #e5d8cd;
+  --clay: #c7b9ac; /* warm border */
+  --loam: #6a6348; /* the hero's hillside */
+  --dusk: #413a2d; /* the hero's ground */
+  --brick: #854c34; /* roadmap hero card */
+  --terracotta: #8f6f5c; /* final CTA */
+
+  /* ---- Meadow: the brand green --------------------------------------- */
+  --meadow: #6f7644;
+  --meadow-light: #8b9460;
+  --meadow-dark: #4a5130;
+  --meadow-soft: #ede9d8;
+  --meadow-ink: #3a4124;
+
+  /* ---- Sky: links, focus, selection only ----------------------------- */
+  --sky: #4893f9;
+  --sky-soft: #eef4ff;
+  --sky-ink: #1f5fbf;
+
+  /* ---- Semantic states ----------------------------------------------- */
+  --success: #3d7a55;
+  --success-soft: #e6efe5;
+  --success-ink: #2c5b3e;
+  --warning: #c2850f;
+  --warning-soft: #fbf0d9;
+  --warning-ink: #7a5208;
+  --danger: #b4432f;
+  --danger-soft: #f8e5e0;
+  --danger-ink: #8a2f20;
+  --info: var(--sky);
+  --info-soft: var(--sky-soft);
+  --info-ink: var(--sky-ink);
+
+  /* ---- Gradients ------------------------------------------------------ */
+  --gradient-meadow-dusk: linear-gradient(to bottom, #f9f9f7 0%, #e8e2d6 42%, #6a6348 82%, #413a2d 100%);
+  --gradient-ink-veil: linear-gradient(to top, rgb(0 0 0 / 0.8), rgb(0 0 0 / 0.45) 50%, transparent);
+  --gradient-brick-wash: linear-gradient(to right, #854c34 0%, #854c34d9 40%, #854c3480 70%, #854c3400 100%);
+  --gradient-clay-dusk: linear-gradient(90deg, rgb(96 70 57) 0%, rgb(104 76 61 / 0.9) 34%, rgb(105 77 62 / 0.56) 58%, rgb(105 77 62 / 0.16) 82%, rgb(105 77 62 / 0) 100%);
+  --gradient-sage: linear-gradient(135deg, #e2e9d5, #f1f4e9);
+  --gradient-haze: linear-gradient(145deg, #e9e2dc 0%, #d8cedf 48%, #b7c5d3 100%);
+  --gradient-graphite: linear-gradient(160deg, #4a4a4a 0%, #262626 46%, #0a0a0a 100%);
+  --gradient-linen: linear-gradient(180deg, #fffdfc 0%, #fbf7f4 100%);
+  --gradient-harvest: linear-gradient(90deg, #e2b328, #5ab98f);
+  --gradient-gold: linear-gradient(135deg, #fff8da, #fff2c2 50%, #fbe8aa);
+  --mask-side-fade: linear-gradient(to right, transparent 0, black 12vw, black calc(100% - 12vw), transparent 100%);
+
+  /* ---- Shadows -------------------------------------------------------- */
+  --shadow-warm-xs: 0 1px 4px rgb(92 74 61 / 0.1);
+  --shadow-warm: 0 10px 32px rgb(43 32 24 / 0.06);
+  --shadow-warm-lg: 0 14px 44px rgb(111 85 70 / 0.13);
+  --shadow-frame: 0 24px 80px rgb(10 10 10 / 0.18);
+
+  /* ---- Motion --------------------------------------------------------- */
+  --ease-unive: cubic-bezier(0.22, 1, 0.36, 1); /* the hero's entrance curve */
+  --duration-quick: 160ms;
+  --duration-standard: 320ms;
+  --duration-slow: 700ms;
+
+  /* ---- shadcn / Base UI semantic slots, mapped onto the brand -------- */
+  --radius: 0.625rem;
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --surface: var(--paper);
+  --surface-hover: var(--paper-hover);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--paper);
+  --secondary: #efece6;
+  --secondary-foreground: var(--ink);
+  --muted: #efece6;
+  --muted-foreground: #77716a;
+  --accent: #f1eee9;
+  --accent-foreground: var(--ink);
+  --destructive: var(--danger);
+  --destructive-foreground: var(--danger-ink);
+  --success-foreground: var(--success-ink);
+  --warning-foreground: var(--warning-ink);
+  --info-foreground: var(--info-ink);
+  --border: #e6e1da;
+  --input: #ddd7cf;
+  --ring: var(--sky);
+}
+
+@theme inline {
+  --breakpoint-md: 50rem;
+  --breakpoint-lg: 64rem;
+
+  --color-paper: var(--paper);
+  --color-paper-hover: var(--paper-hover);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-graphite: var(--graphite);
+  --color-pebble: var(--pebble);
+  --color-linen: var(--linen);
+  --color-sand: var(--sand);
+  --color-sand-hover: var(--sand-hover);
+  --color-clay: var(--clay);
+  --color-loam: var(--loam);
+  --color-dusk: var(--dusk);
+  --color-brick: var(--brick);
+  --color-terracotta: var(--terracotta);
+  --color-meadow: var(--meadow);
+  --color-meadow-light: var(--meadow-light);
+  --color-meadow-dark: var(--meadow-dark);
+  --color-meadow-soft: var(--meadow-soft);
+  --color-meadow-ink: var(--meadow-ink);
+  --color-sky: var(--sky);
+  --color-sky-soft: var(--sky-soft);
+  --color-sky-ink: var(--sky-ink);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --shadow-warm-xs: var(--shadow-warm-xs);
+  --shadow-warm: var(--shadow-warm);
+  --shadow-warm-lg: var(--shadow-warm-lg);
+  --shadow-frame: var(--shadow-frame);
+
+  --ease-unive: var(--ease-unive);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    background: var(--paper);
+  }
+  body {
+    position: relative;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  ::selection {
+    background-color: var(--sky-soft);
+    color: var(--sky-ink);
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-averia-serif), ui-serif, Georgia, serif;
+  }
+  /* Display headings: Averia light, tight like the hero. */
+  .text-display {
+    font-family: var(--font-averia-serif), ui-serif, Georgia, serif;
+    font-weight: 300;
+    letter-spacing: -0.05em;
+    line-height: 1.02;
+  }
+  .eyebrow {
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .mask-side-fade {
+    -webkit-mask-image: var(--mask-side-fade);
+    mask-image: var(--mask-side-fade);
+  }
+}
+
+/* Hero entrance, verbatim from the landing page. */
+[data-enter] {
+  --enter-duration: 0.55s;
+  --enter-delay: 0s;
+  --enter-y: 0px;
+}
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  [data-enter] {
+    animation: hero-enter var(--enter-duration) var(--ease-unive) var(--enter-delay) both;
+  }
+}
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    translate: 0 var(--enter-y);
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+.enter-pill { --enter-duration: 0.55s; --enter-delay: 0.02s; --enter-y: 10px; }
+.enter-title { --enter-duration: 0.7s; --enter-delay: 0.08s; --enter-y: 18px; }
+.enter-subtitle { --enter-duration: 0.65s; --enter-delay: 0.2s; --enter-y: 14px; }
+.enter-cta { --enter-duration: 0.6s; --enter-delay: 0.34s; --enter-y: 12px; }
+.enter-logos { --enter-duration: 0.65s; --enter-delay: 0.5s; --enter-y: 10px; }
+.enter-horizon { --enter-duration: 1.2s; --enter-delay: 0.7s; --enter-y: 28%; }
+.enter-label { --enter-duration: 0.55s; --enter-delay: 0.85s; --enter-y: 6px; }
+
+.horizon-parallax {
+  --horizon-range: 600px;
+  --horizon-travel: -120px;
+}
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+    .horizon-parallax {
+      animation: horizon-parallax linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0px var(--horizon-range);
+    }
+  }
+}
+@media (max-width: 767.98px) {
+  .horizon-parallax {
+    display: none;
+  }
+}
+@keyframes horizon-parallax {
+  to {
+    translate: 0 var(--horizon-travel);
+  }
+}
