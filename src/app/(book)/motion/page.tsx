@@ -111,7 +111,7 @@ export default function MotionPage() {
         title="Easing and timing"
         description="One curve for nearly everything: the hero’s cubic-bezier(0.22, 1, 0.36, 1). It starts quickly and lands softly. Controls you press (buttons, switches) spring back with a slight overshoot, as on iOS; nothing else overshoots, and nothing bounces."
       >
-        <div className="grid gap-4 md:grid-cols-[1fr_2fr]">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_2fr]">
           <Specimen label="--ease-unive" note="cubic-bezier(0.22, 1, 0.36, 1)" tone="white" className="min-h-72">
             <svg viewBox="-0.08 -0.08 1.16 1.16" className="w-56 -scale-y-100" aria-hidden>
               <path d="M0 0H1V1H0Z" fill="none" stroke="var(--border)" strokeWidth="0.008" />
@@ -121,21 +121,21 @@ export default function MotionPage() {
               <circle cx="0.36" cy="1" r="0.025" fill="var(--meadow)" />
             </svg>
           </Specimen>
-          <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-3 gap-4">
+          <div className="flex min-w-0 flex-col gap-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
               {[
                 ["Quick", "160 ms", "hover, press, toggles"],
                 ["Standard", "320 ms", "menus, dialogs, cards"],
                 ["Slow", "700 ms", "page entrances, art"],
               ].map(([n, v, u]) => (
-                <div key={n} className="flex flex-col gap-1 rounded-2xl bg-white p-5 shadow-warm">
+                <div key={n} className="flex min-w-0 flex-col gap-1 rounded-2xl bg-white p-4 shadow-warm sm:p-5">
                   <span className="text-pebble text-xs">{n}</span>
-                  <span className="font-heading font-light text-3xl text-ink tracking-[-0.04em]">{v}</span>
+                  <span className="whitespace-nowrap font-heading font-light text-xl text-ink tracking-[-0.04em] min-[400px]:text-2xl sm:text-3xl">{v}</span>
                   <span className="text-graphite text-xs">{u}</span>
                 </div>
               ))}
             </div>
-            <div className="overflow-hidden rounded-2xl bg-white shadow-warm">
+            <div className="overflow-x-auto rounded-2xl bg-white shadow-warm">
               <table className="w-full text-left text-sm">
                 <caption className="px-5 pt-4 pb-2 text-left text-pebble text-xs">
                   The entrance pattern: rise and fade in, staggered top to bottom.

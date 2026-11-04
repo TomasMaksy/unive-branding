@@ -6,7 +6,7 @@ import type React from "react";
 
 /**
  * iOS-style checkbox: a small white squircle with a hairline that fills
- * meadow when checked (like the switch), the tick drawing itself in. It
+ * meadow the moment it is checked, the tick drawing in quickly. It
  * dips on press and springs back.
  */
 export function Checkbox({
@@ -16,7 +16,7 @@ export function Checkbox({
   return (
     <CheckboxPrimitive.Root
       className={cn(
-        "group/checkbox squircle relative inline-flex size-5.5 shrink-0 cursor-pointer items-center justify-center bg-white shadow-[inset_0_0_0_1.5px_var(--hairline-strong)] outline-none [--sq:6px] [transition:scale_320ms_cubic-bezier(.3,1.4,.5,1),background-color_180ms_ease-out,box-shadow_180ms_ease-out]",
+        "group/checkbox squircle relative inline-flex size-5.5 shrink-0 cursor-pointer items-center justify-center bg-white shadow-[inset_0_0_0_1.5px_var(--hairline-strong)] outline-none [--sq:6px] [transition:scale_240ms_cubic-bezier(.3,1.4,.5,1),background-color_100ms_ease-out,box-shadow_100ms_ease-out]",
         "hover:shadow-[inset_0_0_0_1.5px_var(--pebble)] active:not-data-disabled:scale-[0.86] active:not-data-disabled:duration-100",
         "data-checked:bg-meadow data-checked:shadow-none data-indeterminate:bg-meadow data-indeterminate:shadow-none",
         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
@@ -41,8 +41,8 @@ export function Checkbox({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="3"
-                // The tick draws itself in on check, and is gone at once on uncheck.
-                className="[stroke-dashoffset:1] group-data-checked/checkbox:[stroke-dashoffset:0] group-data-indeterminate/checkbox:[stroke-dashoffset:0] group-data-checked/checkbox:[transition:stroke-dashoffset_260ms_cubic-bezier(.65,0,.35,1)_60ms] group-data-indeterminate/checkbox:[transition:stroke-dashoffset_220ms_ease-out]"
+                // The tick draws in at once on check, and is gone at once on uncheck.
+                className="[stroke-dashoffset:1] group-data-checked/checkbox:[stroke-dashoffset:0] group-data-indeterminate/checkbox:[stroke-dashoffset:0] group-data-checked/checkbox:[transition:stroke-dashoffset_180ms_cubic-bezier(.2,.8,.2,1)] group-data-indeterminate/checkbox:[transition:stroke-dashoffset_140ms_ease-out]"
               />
             </svg>
           </span>

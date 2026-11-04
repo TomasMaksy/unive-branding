@@ -119,7 +119,7 @@ export function Button({
         </span>
         <span
           aria-hidden={!loading}
-          className="pointer-events-none absolute inset-0 grid scale-[1.8] place-items-center opacity-0 blur-[5px] [transition:opacity_260ms_var(--ease-unive),filter_260ms_var(--ease-unive),scale_420ms_cubic-bezier(.3,1.3,.5,1)] in-data-loading:scale-100 in-data-loading:opacity-100 in-data-loading:blur-none [&>svg]:h-(--loader)! [&>svg]:w-auto!"
+          className="pointer-events-none absolute inset-0 grid place-items-center opacity-0 blur-[5px] [transition:opacity_260ms_var(--ease-unive),filter_260ms_var(--ease-unive)] in-data-loading:opacity-100 in-data-loading:blur-none [&>svg]:h-(--loader)! [&>svg]:w-auto! [&>svg]:scale-[1.8] [&>svg]:[transition:scale_420ms_cubic-bezier(.3,1.3,.5,1)] in-data-loading:[&>svg]:scale-100"
           data-slot="button-loading-indicator"
         >
           {/* Sized by --loader: a touch taller than the label's capitals. */}

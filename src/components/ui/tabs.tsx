@@ -34,6 +34,9 @@ export function TabsList({
     <TabsPrimitive.List
       className={cn(
         "relative z-0 flex w-fit items-center justify-center gap-x-0.5",
+        // Too many tabs for a narrow screen: the list scrolls on its own
+        // instead of pushing the page wider.
+        "data-[orientation=horizontal]:max-w-full data-[orientation=horizontal]:justify-start data-[orientation=horizontal]:overflow-x-auto data-[orientation=horizontal]:overscroll-x-contain data-[orientation=horizontal]:[scrollbar-width:none]",
         "data-[orientation=vertical]:flex-col",
         variant === "default"
           ? // iOS segmented control: a mist capsule, the active tab a white
@@ -50,7 +53,7 @@ export function TabsList({
       {children}
       <TabsPrimitive.Indicator
         className={cn(
-          "absolute bottom-0 left-0 h-(--active-tab-height) w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-(--active-tab-bottom) transition-[width,translate] duration-[420ms] ease-[cubic-bezier(.3,1.2,.45,1)]",
+          "absolute bottom-0 left-0 h-(--active-tab-height) w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-(--active-tab-bottom) transition-[width,translate] duration-300 ease-[cubic-bezier(.3,1.2,.45,1)]",
           variant === "underline"
             ? "z-10 rounded-full bg-ink data-[orientation=horizontal]:h-0.5 data-[orientation=vertical]:top-0 data-[orientation=vertical]:bottom-auto data-[orientation=vertical]:w-0.5 data-[orientation=vertical]:translate-x-0 data-[orientation=vertical]:translate-y-(--active-tab-top)"
             : "-z-1 rounded-full bg-white shadow-[0_1px_3px_rgb(29_27_24/0.12),0_0_0_0.5px_rgb(29_27_24/0.04)]",

@@ -66,7 +66,7 @@ import { Radio, RadioGroup } from "@/components/ui/radio-group";
             note="Two or three short options in a row: flex-row on the group."
             code={`<div className="flex flex-col gap-3">
   <Label id="role">I’m a</Label>
-  <RadioGroup defaultValue="student" aria-labelledby="role" className="flex-row gap-6">
+  <RadioGroup defaultValue="student" aria-labelledby="role" className="flex-row flex-wrap gap-x-6 gap-y-3">
     <Label className="font-normal"><Radio value="student" /> Student</Label>
     <Label className="font-normal"><Radio value="parent" /> Parent</Label>
     <Label className="font-normal"><Radio value="counsellor" /> Counsellor</Label>
@@ -75,7 +75,7 @@ import { Radio, RadioGroup } from "@/components/ui/radio-group";
           >
             <div className="flex flex-col gap-3">
               <Label id="ra-role">I’m a</Label>
-              <RadioGroup defaultValue="student" aria-labelledby="ra-role" className="flex-row gap-6">
+              <RadioGroup defaultValue="student" aria-labelledby="ra-role" className="flex-row flex-wrap gap-x-6 gap-y-3">
                 <Label className="font-normal">
                   <Radio value="student" /> Student
                 </Label>

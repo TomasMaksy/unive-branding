@@ -71,7 +71,7 @@ export function PressBand() {
         <p className="eyebrow enter-label text-white/85 drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]" data-enter="">
           Featured in
         </p>
-        <ul aria-label="Featured in" className="enter-logos flex items-center gap-x-5 sm:gap-x-6 md:gap-x-7" data-enter="">
+        <ul aria-label="Featured in" className="enter-logos flex flex-wrap items-center justify-center gap-x-5 gap-y-3 sm:gap-x-6 md:flex-nowrap md:justify-start md:gap-x-7" data-enter="">
           {PRESS.map((l) => (
             <li key={l.alt} className="flex h-5 shrink-0 items-center">
               <Image src={l.src} alt={l.alt} width={l.w} height={l.h} sizes="140px" className={cn(logoClass, l.className)} />

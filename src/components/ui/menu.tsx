@@ -143,9 +143,9 @@ export function MenuCheckboxItem({
         // The Switch, at menu size: meadow when on, the thumb springs across.
         <span
           aria-hidden
-          className="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full bg-input p-0.5 transition-colors duration-300 ease-unive in-data-checked:bg-meadow"
+          className="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full bg-input p-0.5 transition-colors duration-150 ease-out in-data-checked:bg-meadow"
         >
-          <span className="block size-4 rounded-full bg-white shadow-[0_1px_3px_rgb(43_32_24/0.18)] transition-[translate] duration-[420ms] ease-[cubic-bezier(.3,1.35,.45,1)] in-data-checked:translate-x-3" />
+          <span className="block size-4 rounded-full bg-white shadow-[0_1px_3px_rgb(43_32_24/0.18)] transition-[translate] duration-[280ms] ease-[cubic-bezier(.3,1.35,.45,1)] in-data-checked:translate-x-3" />
         </span>
       ) : (
         <span className="grid size-4 shrink-0 place-items-center">
