@@ -1,3 +1,4 @@
+import { CalendarIcon, CircleCheckIcon, FileTextIcon, StarIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { HeroArt } from "@/components/brand/hero-art";
@@ -6,21 +7,6 @@ import { UnLoader } from "@/components/brand/un-loader";
 import { Section } from "@/components/book/section";
 import { Button } from "@/components/ui/button";
 
-const PRINCIPLES = [
-  {
-    title: "Drawn by hand",
-    body: "The logo is ink on paper, not a font. Keep its wobble. Never retype it, trace it or tidy it.",
-  },
-  {
-    title: "Warm, never loud",
-    body: "Paper, ink and one green, meadow. Bright colours only for states.",
-  },
-  {
-    title: "Unhurried",
-    body: "Things arrive like the hero does: fast start, long soft landing. Nothing bounces, nothing hops.",
-  },
-];
-
 const INDEX = [
   { href: "/moodboard", title: "Moodboard", note: "The brand at a glance: scenes, colour, type and the mark together." },
   { href: "/logo", title: "Logo", note: "Wordmark, the “un” icon, app icons, favicon, rules." },
@@ -28,6 +14,7 @@ const INDEX = [
   { href: "/color", title: "Colour", note: "Paper, ink, earth, meadow and the four states." },
   { href: "/type", title: "Typography", note: "Averia Serif Libre for voice, Inter for interface." },
   { href: "/imagery", title: "Imagery", note: "Warm 3D scenes, and the one scrim that keeps text readable on them." },
+  { href: "/icons", title: "Icons", note: "Lucide outlines: sizes, colours, the two fills and the set we use." },
   { href: "/components", title: "Components", note: "Buttons, fields, cards, alerts, dialogs and more." },
 ] as const;
 
@@ -73,6 +60,15 @@ function IndexVisual({ href }: { href: (typeof INDEX)[number]["href"] }) {
           className="object-cover transition-transform duration-500 ease-unive group-hover:scale-[1.03]"
         />
       );
+    case "/icons":
+      return (
+        <div className="flex items-center gap-5 text-ink">
+          <CalendarIcon className="size-7" aria-hidden />
+          <FileTextIcon className="size-7" aria-hidden />
+          <StarIcon className="size-7 fill-meadow text-meadow" aria-hidden />
+          <CircleCheckIcon className="size-7 fill-success text-white" aria-hidden />
+        </div>
+      );
     case "/components":
       return (
         <div className="flex items-center gap-2">
@@ -114,25 +110,13 @@ export default function Overview() {
         <HeroArt priority className="mt-auto h-[46vh] min-h-[16rem] md:h-[52vh]" />
       </section>
 
-      <Section title="Principles" description="Three ideas hold the brand together. When a choice isn’t covered here, pick the option that best fits these.">
-        <div className="grid gap-4 md:grid-cols-3">
-          {PRINCIPLES.map((p, i) => (
-            <article key={p.title} className="flex flex-col gap-3 rounded-[28px] bg-white p-7 shadow-warm">
-              <span className="font-heading font-light text-meadow text-sm">0{i + 1}</span>
-              <h3 className="font-heading font-light text-3xl text-ink tracking-[-0.04em]">{p.title}</h3>
-              <p className="text-graphite text-sm leading-relaxed">{p.body}</p>
-            </article>
-          ))}
-        </div>
-      </Section>
-
       <Section title="In this book">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {INDEX.map((s) => (
             <Link
               key={s.href}
               href={s.href}
-              className="group flex first:sm:col-span-2 flex-col overflow-hidden rounded-[28px] bg-white shadow-warm transition-shadow duration-300 hover:shadow-warm-lg"
+              className="group flex first:sm:col-span-2 last:sm:col-span-2 last:xl:col-span-4 flex-col overflow-hidden rounded-[28px] bg-white shadow-warm transition-shadow duration-300 hover:shadow-warm-lg"
             >
               <div className="relative flex h-44 items-center justify-center overflow-hidden bg-paper/70 transition-colors duration-300 group-hover:bg-mist/50">
                 <IndexVisual href={s.href} />

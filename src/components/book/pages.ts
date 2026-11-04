@@ -1,6 +1,7 @@
 import {
   BookOpen,
   Component,
+  Shapes,
   Images,
   LayoutGrid,
   type LucideIcon,
@@ -39,6 +40,7 @@ export const GROUPS: readonly BookGroup[] = [
       { href: "/color", label: "Colour", icon: Palette },
       { href: "/type", label: "Typography", icon: Type },
       { href: "/imagery", label: "Imagery", icon: Images },
+      { href: "/icons", label: "Icons", icon: Shapes },
     ],
   },
   {
