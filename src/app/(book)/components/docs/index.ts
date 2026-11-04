@@ -5,6 +5,7 @@ import BadgeDoc from "./badge";
 import ButtonDoc from "./button";
 import CardDoc from "./card";
 import CheckboxDoc from "./checkbox";
+import ComboboxDoc from "./combobox";
 import DialogDoc from "./dialog";
 import InputDoc from "./input";
 import MenuDoc from "./menu";
@@ -24,6 +25,7 @@ export const DOCS: Record<string, ComponentType> = {
   button: ButtonDoc,
   card: CardDoc,
   checkbox: CheckboxDoc,
+  combobox: ComboboxDoc,
   dialog: DialogDoc,
   input: InputDoc,
   menu: MenuDoc,

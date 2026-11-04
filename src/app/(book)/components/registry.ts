@@ -6,6 +6,7 @@ export const COMPONENTS: ComponentDoc[] = [
   { slug: "input", name: "Input", group: "Fields", summary: "Filled capsules for one line of text, search and errors." },
   { slug: "textarea", name: "Textarea", group: "Fields", summary: "The same filled field for longer answers; it grows as you type." },
   { slug: "select", name: "Select", group: "Fields", summary: "Opens over itself, the chosen row exactly where the field was." },
+  { slug: "combobox", name: "Combobox", group: "Fields", summary: "Type to narrow a long list, then pick one: schools, countries, majors." },
   { slug: "checkbox", name: "Checkbox", group: "Choices", summary: "A small squircle that fills meadow and draws its tick." },
   { slug: "radio", name: "Radio group", group: "Choices", summary: "One of a few: a circle whose centre springs in." },
   { slug: "switch", name: "Switch", group: "Choices", summary: "On and off, iOS shaped, meadow when on." },

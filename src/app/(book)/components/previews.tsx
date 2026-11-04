@@ -31,6 +31,17 @@ const PREVIEWS: Record<string, React.ReactNode> = {
       Biology <span className="text-pebble">⌄</span>
     </div>
   ),
+  combobox: (
+    <div className="flex w-52 flex-col gap-1.5">
+      <div className="flex h-10 items-center rounded-full bg-white px-4 text-[15px] text-ink shadow-[0_0_0_1.5px_var(--meadow),0_0_0_5px_color-mix(in_oklab,var(--meadow)_16%,transparent)]">
+        Co<span className="ml-px h-4 w-px bg-ink" />
+      </div>
+      <div className="rounded-[18px] bg-white p-1 text-sm shadow-[0_12px_40px_rgb(29_27_24/0.14),0_0_0_1px_rgb(29_27_24/0.06)]">
+        <div className="rounded-xl bg-mist px-3 py-1.5 text-ink">Columbia</div>
+        <div className="px-3 py-1.5 text-graphite">Cornell</div>
+      </div>
+    </div>
+  ),
   checkbox: (
     <div className="flex flex-col gap-2.5 text-ink text-sm">
       <span className="flex items-center gap-2.5"><Checkbox defaultChecked /> Remind me</span>
